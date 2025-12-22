@@ -4,7 +4,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { JwtService } from 'src/auth/infrastructure/jwt/jwt.service';
+import {
+  JwtPayload,
+  JwtService,
+} from 'src/auth/infrastructure/jwt/jwt.service';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
@@ -33,5 +36,9 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     } catch (error) {
       throw new UnauthorizedException('Invalid or expired token');
     }
+  }
+
+  validate(payload: JwtPayload) {
+    return payload; // passport sẽ gắn vào req.user
   }
 }

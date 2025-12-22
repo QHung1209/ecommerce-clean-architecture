@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PrismaModule } from '../shared/infrastructure/prisma.module';
@@ -15,19 +15,16 @@ import { PASSWORD_HASHER } from 'src/shared/shared.constants';
 import { RegisterUseCase } from './application/use-cases/register.use-case';
 
 // Token for dependency injection
-
+@Global()
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        secret: configService.getOrThrow<string>('JWT_SECRET'),
+        secret: configService.get('JWT_SECRET'),
         signOptions: {
-          expiresIn: configService.getOrThrow<number>('JWT_EXPIRES_IN', 900),
+          expiresIn: configService.get('JWT_EXPIRES_IN', 900),
         },
       }),
     }),
