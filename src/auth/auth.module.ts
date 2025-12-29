@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { PrismaModule } from '../shared/infrastructure/prisma.module';
+import { PrismaModule } from '../shared/infrastructure/database/prisma/prisma.module';
 import { UserModule } from '../user/user.module';
 import { JwtService } from './infrastructure/jwt/jwt.service';
 import { PrismaRefreshTokenRepository } from './infrastructure/repositories/prisma/prisma-refresh-token.repository';

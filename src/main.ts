@@ -1,11 +1,19 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
-import { TransformInterceptor } from './shared/logging/transform.interceptor';
-import { LoggingInterceptor } from './shared/logging/logging.interceptor';
+import { TransformInterceptor } from './shared/presentation/interceptors/transform.interceptor';
+import { LoggingInterceptor } from './shared/presentation/interceptors/logging.interceptor';
+import { RedisIoAdapter } from './shared/infrastructure/cache/redis/redis-io.adapter';
+import { RedisService } from './shared/infrastructure/cache/redis/redis.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Setup Redis adapter for WebSocket
+  const redisService = app.get(RedisService);
+  const redisIoAdapter = new RedisIoAdapter(app, redisService);
+  await redisIoAdapter.connectToRedis();
+  app.useWebSocketAdapter(redisIoAdapter);
 
   // Enable validation globally
   app.useGlobalPipes(
@@ -17,7 +25,6 @@ async function bootstrap() {
   );
   app.useGlobalInterceptors(new LoggingInterceptor());
   app.useGlobalInterceptors(new TransformInterceptor());
-  await app.listen(3000);
-  console.log(`Application is running on: http://localhost:3000`);
+  await app.listen(process.env.PORT || 3003);
 }
 bootstrap();
