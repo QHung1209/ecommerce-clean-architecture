@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule } from 'src/shared/infrastructure/prisma.module';
+import { PrismaModule } from 'src/shared/infrastructure/database/prisma/prisma.module';
 import { PERMISSION_REPOSITORY } from './permission.constants';
 import { PrismaPermissionRepository } from './infrastructure/repositories/prisma/prisma-permission.repository';
-import { CreatePermissionUseCase } from './application/user-case/create-permission.use-case';
-import { DeletePermissionUseCase } from './application/user-case/delete-permission.use-case';
-import { UpdatePermissionUseCase } from './application/user-case/update-permission.use-case';
-import { GetPermissionUseCase } from './application/user-case/get-permission.use-case';
-import { ListPermissionsUseCase } from './application/user-case/list-permissions.use-case';
+import { CreatePermissionUseCase } from './application/use-cases/create-permission.use-case';
+import { DeletePermissionUseCase } from './application/use-cases/delete-permission.use-case';
+import { UpdatePermissionUseCase } from './application/use-cases/update-permission.use-case';
+import { GetPermissionUseCase } from './application/use-cases/get-permission.use-case';
+import { ListPermissionsUseCase } from './application/use-cases/list-permissions.use-case';
 import { PermissionController } from './presentation/controllers/permission.controller';
 
 @Module({

@@ -4,7 +4,7 @@ import {
   PermissionProps,
 } from 'src/permission/domain/entities/permission.entity';
 import { PermissionRepositoryInterface } from 'src/permission/domain/interfaces/permission-repository.interface';
-import { PrismaService } from 'src/shared/infrastructure/prisma.service';
+import { PrismaService } from 'src/shared/infrastructure/database/prisma/prisma.service';
 import { PrismaPermissionMapper } from './prisma-permission.mapper';
 import { ListPermissionsDto } from 'src/permission/presentation/dto/get-permission.dto';
 
