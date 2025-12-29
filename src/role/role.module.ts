@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { ROLE_REPOSITORY } from './role.constants';
 import { PrismaRoleRepository } from './infrastructure/repositories/prisma/prisma-role.repository';
 import { RoleController } from 'src/role/presentation/controllers/role.controller';
-import { CreateRoleUseCase } from './application/use-case/create-role.use-case';
-import { UpdateRoleUseCase } from './application/use-case/update-role.use-case';
-import { DeleteRoleUseCase } from './application/use-case/delete-role.use-case';
-import { GetRoleUseCase } from './application/use-case/get-role.use-case';
-import { ListRolesUseCase } from './application/use-case/list-roles.use-case';
+import { CreateRoleUseCase } from './application/use-cases/create-role.use-case';
+import { UpdateRoleUseCase } from './application/use-cases/update-role.use-case';
+import { DeleteRoleUseCase } from './application/use-cases/delete-role.use-case';
+import { GetRoleUseCase } from './application/use-cases/get-role.use-case';
+import { ListRolesUseCase } from './application/use-cases/list-roles.use-case';
 
 @Module({
   providers: [

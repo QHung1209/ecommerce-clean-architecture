@@ -8,17 +8,17 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CreateRoleDto } from 'src/role/presentation/dto/create-role.dto';
-import { CreateRoleUseCase } from 'src/role/application/use-case/create-role.use-case';
+import { CreateRoleUseCase } from 'src/role/application/use-cases/create-role.use-case';
 import { Post } from '@nestjs/common';
 import { Body, Req } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/presentation/guards/jwt-auth.guard';
 import { RoleResponseMapper } from '../mappers/role-response.mapper';
 import { RoleResponseDto } from '../dto/role-response.dto';
 import { UpdateRoleDto } from '../dto/update-role.dto';
-import { UpdateRoleUseCase } from 'src/role/application/use-case/update-role.use-case';
-import { DeleteRoleUseCase } from 'src/role/application/use-case/delete-role.use-case';
-import { ListRolesUseCase } from 'src/role/application/use-case/list-roles.use-case';
-import { GetRoleUseCase } from 'src/role/application/use-case/get-role.use-case';
+import { UpdateRoleUseCase } from 'src/role/application/use-cases/update-role.use-case';
+import { DeleteRoleUseCase } from 'src/role/application/use-cases/delete-role.use-case';
+import { ListRolesUseCase } from 'src/role/application/use-cases/list-roles.use-case';
+import { GetRoleUseCase } from 'src/role/application/use-cases/get-role.use-case';
 import { SharedQueryDto } from 'src/shared/presentation/dto/shared.dto';
 
 @Controller('roles')

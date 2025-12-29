@@ -1,6 +1,6 @@
 import { Role, RoleProps } from 'src/role/domain/entities/role.entity';
 import { RoleRepositoryInterface } from 'src/role/domain/interfaces/role-repository.interface';
-import { PrismaService } from 'src/shared/infrastructure/prisma.service';
+import { PrismaService } from 'src/shared/infrastructure/database/prisma/prisma.service';
 import { PrismaRoleMapper } from './prisma-role.mapper';
 import { SharedQueryDto } from 'src/shared/presentation/dto/shared.dto';
 import { CreateRoleDto } from 'src/role/presentation/dto/create-role.dto';
@@ -31,7 +31,11 @@ export class PrismaRoleRepository implements RoleRepositoryInterface {
     return PrismaRoleMapper.toDomain(roleCreated, roleCreated.permissions);
   }
 
-  async update(id: number, role: UpdateRoleDto, updatedById: number): Promise<Role> {
+  async update(
+    id: number,
+    role: UpdateRoleDto,
+    updatedById: number,
+  ): Promise<Role> {
     const roleUpdated = await this.prisma.role.update({
       where: { id: id },
       data: {
