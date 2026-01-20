@@ -1,11 +1,11 @@
-import { ListPermissionsDto } from "src/permission/presentation/dto/get-permission.dto";
-import { Permission, PermissionProps } from "../entities/permission.entity";
+import { Permission } from '../entities/permission.entity';
+import { BaseRepositoryInterface } from 'src/shared/domain/interfaces/base-repository.interface';
 
-export interface PermissionRepositoryInterface {
-  create(permission: PermissionProps, createdById: number): Promise<Permission>;
-  findById(id: number): Promise<Permission | null>;
-  findAll(query: ListPermissionsDto): Promise<Permission[]>;
-  update(id: number, permission: Partial<PermissionProps>, updatedById: number): Promise<Permission>;
-  delete(id: number): Promise<void>;
+export interface PermissionRepositoryInterface extends BaseRepositoryInterface<
+  Permission,
+  number
+> {
+  save(permission: Permission, createdById: number): Promise<Permission>;
+  findAllByIds(ids: number[]): Promise<Permission[]>;
   count(): Promise<number>;
 }

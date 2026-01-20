@@ -1,43 +1,66 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService as NestJwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-
-export interface JwtPayload {
-  id: number; // user id
-  email: string;
-}
+import {
+  AuthJwtServiceInterface,
+  JwtPayload,
+} from 'src/auth/domain/interfaces/auth-jwt.service.interface';
 
 @Injectable()
-export class JwtService {
+export class AuthJwtService implements AuthJwtServiceInterface {
   constructor(
     private readonly jwtService: NestJwtService,
     private readonly configService: ConfigService,
   ) {}
 
-  generateAccessToken(userId: number, email: string): string {
-    const payload: JwtPayload = { id: userId, email };
-    // Don't override secret - use module configuration
-    return this.jwtService.sign(payload);
+  generateAccessToken(
+    userId: number,
+    email: string,
+    roleId: number,
+    jti: string,
+    tokenVersion: number,
+  ): string {
+    const payload = { id: userId, email, roleId, jti, tokenVersion };
+    return this.jwtService.sign(payload, {
+      secret: this.configService.get('JWT_SECRET'),
+    });
   }
 
-  generateRefreshToken(userId: number, email: string): string {
-    const payload: JwtPayload = { id: userId, email };
+  generateRefreshToken(
+    userId: number,
+    email: string,
+    roleId: number,
+    jti: string,
+    tokenVersion: number,
+  ): string {
+    const payload = { id: userId, email, roleId, jti, tokenVersion };
     return this.jwtService.sign(payload, {
       secret: this.configService.get('JWT_REFRESH_SECRET'),
-      expiresIn: this.configService.get('JWT_REFRESH_EXPIRES_IN', 9000),
+      expiresIn: this.configService.get(
+        'JWT_REFRESH_EXPIRES_IN',
+        15 * 24 * 60 * 60,
+      ),
     });
   }
 
   verifyAccessToken(token: string) {
-    return this.jwtService.verify(token);
+    const accessToken = this.extractToken(token);
+    return this.jwtService.verify<JwtPayload>(accessToken, {
+      secret: this.configService.get('JWT_SECRET'),
+    });
   }
 
-  getRefreshTokenExpiration(): Date {
-    const expiresInMs = Number(
-      this.configService.get('JWT_REFRESH_EXPIRES_IN', 7 * 24 * 60 * 60),
-    );
+  verifyRefreshToken(token: string) {
+    const refreshToken = this.extractToken(token);
+    return this.jwtService.verify<JwtPayload>(refreshToken, {
+      secret: this.configService.get('JWT_REFRESH_SECRET'),
+    });
+  }
 
-    const date = new Date(Date.now() + expiresInMs);
-    return date;
+  private extractToken(token: string) {
+    if (token.startsWith('Bearer ')) {
+      return token.split('Bearer ')[1];
+    }
+    return token;
   }
 }

@@ -1,59 +1,37 @@
-import { Role, RoleProps } from 'src/role/domain/entities/role.entity';
+import { Role } from 'src/role/domain/entities/role.entity';
 import { RoleRepositoryInterface } from 'src/role/domain/interfaces/role-repository.interface';
 import { PrismaService } from 'src/shared/infrastructure/database/prisma/prisma.service';
 import { PrismaRoleMapper } from './prisma-role.mapper';
 import { SharedQueryDto } from 'src/shared/presentation/dto/shared.dto';
-import { CreateRoleDto } from 'src/role/presentation/dto/create-role.dto';
 import { Injectable } from '@nestjs/common';
-import { UpdateRoleDto } from 'src/role/presentation/dto/update-role.dto';
+import { HTTPMethod } from '@prisma/client';
 
 @Injectable()
 export class PrismaRoleRepository implements RoleRepositoryInterface {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(role: CreateRoleDto, createdById: number): Promise<Role> {
-    const roleCreated = await this.prisma.role.create({
-      data: {
-        name: role.name,
-        description: role.description,
-        isActive: role.isActive,
-        permissions: {
-          connect: role.permissions.map((permission) => ({
-            id: permission,
-          })),
-        },
-        createdById,
-      },
-      include: {
-        permissions: true,
-      },
-    });
-    return PrismaRoleMapper.toDomain(roleCreated, roleCreated.permissions);
-  }
-
-  async update(
-    id: number,
-    role: UpdateRoleDto,
-    updatedById: number,
-  ): Promise<Role> {
-    const roleUpdated = await this.prisma.role.update({
-      where: { id: id },
-      data: {
-        name: role.name,
-        description: role.description,
-        isActive: role.isActive,
-        permissions: {
-          set: role.permissions?.map((permission) => ({
-            id: permission,
-          })),
-        },
-        updatedById,
-      },
-      include: {
-        permissions: true,
-      },
-    });
-    return PrismaRoleMapper.toDomain(roleUpdated, roleUpdated.permissions);
+  async save(role: Role, createdById: number): Promise<Role> {
+    const savedRole = role.hasId()
+      ? await this.prisma.role.update({
+          where: { id: role.getId() },
+          data: {
+            ...PrismaRoleMapper.toUpdatePersistence(
+              role.getProps(),
+              role.getId(),
+            ),
+            updatedById: createdById,
+          },
+        })
+      : await this.prisma.role.create({
+          data: {
+            ...PrismaRoleMapper.toCreatePersistence(
+              role.getProps(),
+              role.getId(),
+            ),
+            createdById,
+          },
+        });
+    return PrismaRoleMapper.toDomain(savedRole);
   }
 
   async delete(id: number): Promise<void> {
@@ -85,16 +63,41 @@ export class PrismaRoleRepository implements RoleRepositoryInterface {
       orderBy: {
         name: 'desc',
       },
-      include: {
-        permissions: true,
-      },
     });
-    return roles.map((role) =>
-      PrismaRoleMapper.toDomain(role, role.permissions),
-    );
+    return roles.map((role) => PrismaRoleMapper.toDomain(role));
   }
 
   async count(): Promise<number> {
     return this.prisma.role.count();
+  }
+
+  async getPermissionsByRoleId(
+    roleId: number,
+  ): Promise<{ path: string; method: HTTPMethod }[] | null> {
+    const role = await this.prisma.role.findUnique({
+      where: { id: roleId },
+      select: {
+        permissions: {
+          select: {
+            method: true,
+            path: true,
+          },
+        },
+      },
+    });
+    return role?.permissions ?? null;
+  }
+
+  async getRolesByPermissionId(permissionId: number): Promise<Role[] | []> {
+    const roles = await this.prisma.role.findMany({
+      where: {
+        permissions: {
+          some: {
+            id: permissionId,
+          },
+        },
+      },
+    });
+    return roles.map((role) => PrismaRoleMapper.toDomain(role));
   }
 }

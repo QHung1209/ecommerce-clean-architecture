@@ -12,17 +12,23 @@ import { ListPermissionsDto } from 'src/permission/presentation/dto/get-permissi
 export class PrismaPermissionRepository implements PermissionRepositoryInterface {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(
-    permission: PermissionProps,
-    createdById: number,
-  ): Promise<Permission> {
-    const permissionCreated = await this.prisma.permission.create({
-      data: {
-        ...permission,
-        createdById,
-      },
-    });
-    return PrismaPermissionMapper.toDomain(permissionCreated);
+  async save(permission: Permission, changeById: number): Promise<Permission> {
+    const persistenceData = PrismaPermissionMapper.toPersistence(
+      permission.getProps(),
+      permission.getId(),
+    );
+    const savedPermission = permission.hasId()
+      ? await this.prisma.permission.update({
+          where: { id: permission.getId() },
+          data: { ...persistenceData, updatedById: changeById },
+        })
+      : await this.prisma.permission.create({
+          data: {
+            ...persistenceData,
+            createdById: changeById,
+          },
+        });
+    return PrismaPermissionMapper.toDomain(savedPermission);
   }
 
   async findById(id: number): Promise<Permission | null> {
@@ -49,20 +55,19 @@ export class PrismaPermissionRepository implements PermissionRepositoryInterface
     return permissions.map(PrismaPermissionMapper.toDomain);
   }
 
-  async count(): Promise<number> {
-    return this.prisma.permission.count();
+  async findAllByIds(ids: number[]): Promise<Permission[]> {
+    const permissions = await this.prisma.permission.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+    });
+    return permissions.map(PrismaPermissionMapper.toDomain);
   }
 
-  async update(
-    id: number,
-    permission: PermissionProps,
-    updatedById: number,
-  ): Promise<Permission> {
-    const permissionUpdated = await this.prisma.permission.update({
-      where: { id },
-      data: { ...permission, updatedById },
-    });
-    return PrismaPermissionMapper.toDomain(permissionUpdated);
+  async count(): Promise<number> {
+    return this.prisma.permission.count();
   }
 
   async delete(id: number): Promise<void> {

@@ -1,11 +1,17 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { HTTPMethod } from '@prisma/client';
 import {
   Permission,
   PermissionProps,
 } from 'src/permission/domain/entities/permission.entity';
 import type { PermissionRepositoryInterface } from 'src/permission/domain/interfaces/permission-repository.interface';
 import { PERMISSION_REPOSITORY } from 'src/permission/permission.constants';
-
+export interface UpdatePermissionCommand {
+  name: string;
+  description: string;
+  path: string;
+  method: HTTPMethod;
+}
 @Injectable()
 export class UpdatePermissionUseCase {
   constructor(
@@ -14,7 +20,7 @@ export class UpdatePermissionUseCase {
   ) {}
   async execute(
     id: number,
-    permission: Partial<PermissionProps>,
+    permission: UpdatePermissionCommand,
     updatedById: number,
   ): Promise<Permission> {
     const permissionExisted = await this.permissionRepository.findById(id);
@@ -24,6 +30,7 @@ export class UpdatePermissionUseCase {
         key: 'PERMISSION_NOT_FOUND',
       });
     }
-    return this.permissionRepository.update(id, permission, updatedById);
+    permissionExisted.update(permission);
+    return this.permissionRepository.save(permissionExisted, updatedById);
   }
 }

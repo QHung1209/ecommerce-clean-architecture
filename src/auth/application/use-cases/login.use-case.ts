@@ -1,11 +1,16 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import type { UserRepositoryInterface } from 'src/user/domain/interfaces/user-repository.interface';
-import { JwtService } from 'src/auth/infrastructure/jwt/jwt.service';
-import type { RefreshTokenRepositoryInterface } from 'src/auth/domain/interfaces/refresh-token-repository.interface';
 import type { BcryptPasswordHasher } from 'src/shared/infrastructure/security/bcrypt-password-hasher.service';
 import { USER_REPOSITORY } from 'src/user/user.constants';
-import { REFRESH_TOKEN_REPOSITORY } from 'src/auth/auth.constants';
+import {
+  AUTH_JWT_SERVICE,
+  PERMISSION_CACHE_SERVICE,
+} from 'src/auth/auth.constants';
 import { PASSWORD_HASHER } from 'src/shared/shared.constants';
+import { CreateDeviceUseCase } from 'src/device/application/use-cases/create-device.use-case';
+import type { PermissionCacheServiceInterface } from 'src/auth/domain/interfaces/permission-cache.service.interface';
+import type { AuthJwtServiceInterface } from 'src/auth/domain/interfaces/auth-jwt.service.interface';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface LoginResult {
   accessToken: string;
@@ -14,6 +19,7 @@ export interface LoginResult {
     id: number;
     email: string;
     name: string;
+    roleId: number | null;
   };
 }
 
@@ -22,53 +28,80 @@ export class LoginUseCase {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryInterface,
-    @Inject(REFRESH_TOKEN_REPOSITORY)
-    private readonly refreshTokenRepository: RefreshTokenRepositoryInterface,
     @Inject(PASSWORD_HASHER)
     private readonly passwordHasher: BcryptPasswordHasher,
-    private readonly jwtService: JwtService,
+    @Inject(PERMISSION_CACHE_SERVICE)
+    private readonly permissionCacheService: PermissionCacheServiceInterface,
+    @Inject(AUTH_JWT_SERVICE)
+    private readonly jwtService: AuthJwtServiceInterface,
+
+    private readonly createDeviceUseCase: CreateDeviceUseCase,
   ) {}
 
-  async execute(email: string, password: string): Promise<LoginResult> {
-    // 1. Find user by email
+  async execute(
+    email: string,
+    password: string,
+    ip: string,
+    userAgent: string,
+  ): Promise<LoginResult> {
     const user = await this.userRepository.findByEmail(email);
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Check your email and password again');
     }
 
-    // 2. Verify password
     const isPasswordValid = await this.passwordHasher.compare(
       password,
-      user.getPassword(),
+      user.getPassword().getValue(),
     );
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Check your email and password again');
     }
 
-    // 3. Check if user is active
     if (!user.isActive()) {
       throw new UnauthorizedException('User account is not active');
     }
 
-    // 4. Generate tokens
+    const userId = user.getId();
+    if (userId === undefined) {
+      throw new Error('User ID is undefined');
+    }
+    const jti = uuidv4();
     const accessToken = this.jwtService.generateAccessToken(
-      user.id,
-      user.getEmail(),
+      userId,
+      user.getEmail().getValue(),
+      user.getRoleId(),
+      jti,
+      user.getTokenVersion(),
     );
-    const refreshToken = this.jwtService.generateRefreshToken(user.id, user.getEmail());
+    const refreshToken = this.jwtService.generateRefreshToken(
+      userId,
+      user.getEmail().getValue(),
+      user.getRoleId(),
+      jti,
+      user.getTokenVersion(),
+    );
 
-    // 5. Store refresh token
-    const expiresAt = this.jwtService.getRefreshTokenExpiration();
-    await this.refreshTokenRepository.create(user.id, refreshToken, expiresAt);
+    await Promise.all([
+      this.permissionCacheService.cachePermissionsByUser(
+        userId,
+        user.getRoleId(),
+      ),
+      this.createDeviceUseCase.execute({
+        ip,
+        userAgent,
+        userId: userId,
+        jti,
+      }),
+    ]);
 
-    // 6. Return result
     return {
       accessToken,
       refreshToken,
       user: {
-        id: user.id,
-        email: user.getEmail(),
+        id: userId,
+        email: user.getEmail().getValue(),
         name: user.getName(),
+        roleId: user.getRoleId() || null,
       },
     };
   }

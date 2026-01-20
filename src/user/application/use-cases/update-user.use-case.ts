@@ -1,7 +1,16 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Email } from 'src/shared/domain/value-objects/email.vo';
 import { User, UserProps } from 'src/user/domain/entities/user.entity';
 import type { UserRepositoryInterface } from 'src/user/domain/interfaces/user-repository.interface';
 import { USER_REPOSITORY } from 'src/user/user.constants';
+
+export interface UpdateUserCommand {
+  name: string;
+  email: string;
+  phoneNumber: string;
+  avatar: string;
+  roleId: number;
+}
 
 @Injectable()
 export class UpdateUserUseCase {
@@ -10,7 +19,7 @@ export class UpdateUserUseCase {
     private readonly userRepository: UserRepositoryInterface,
   ) {}
 
-  async execute(id: number, data: Partial<UserProps>): Promise<User> {
+  async execute(id: number, data: UpdateUserCommand): Promise<User> {
     const userExisted = await this.userRepository.findById(id);
     if (!userExisted) {
       throw new NotFoundException({
@@ -18,6 +27,13 @@ export class UpdateUserUseCase {
         key: 'USER_NOT_FOUND',
       });
     }
-    return this.userRepository.update(id, data as UserProps);
+    userExisted.updateProfile({
+      name: data.name,
+      email: Email.create(data.email),
+      phoneNumber: data.phoneNumber,
+      avatar: data.avatar,
+      roleId: data.roleId,
+    });
+    return await this.userRepository.save(userExisted);
   }
 }

@@ -11,7 +11,7 @@ import { CreateRoleDto } from 'src/role/presentation/dto/create-role.dto';
 import { CreateRoleUseCase } from 'src/role/application/use-cases/create-role.use-case';
 import { Post } from '@nestjs/common';
 import { Body, Req } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/presentation/guards/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/auth/infrastructure/guards/jwt-auth.guard';
 import { RoleResponseMapper } from '../mappers/role-response.mapper';
 import { RoleResponseDto } from '../dto/role-response.dto';
 import { UpdateRoleDto } from '../dto/update-role.dto';
@@ -22,7 +22,6 @@ import { GetRoleUseCase } from 'src/role/application/use-cases/get-role.use-case
 import { SharedQueryDto } from 'src/shared/presentation/dto/shared.dto';
 
 @Controller('roles')
-@UseGuards(JwtAuthGuard)
 export class RoleController {
   constructor(
     private readonly createRoleUseCase: CreateRoleUseCase,

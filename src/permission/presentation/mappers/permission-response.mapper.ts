@@ -10,7 +10,7 @@ export interface PaginatedPermissionResult {
 export class PermissionResponseMapper {
   static toResponse(permission: Permission) {
     return {
-      id: permission.id,
+      id: permission.getId(),
       name: permission.getName(),
       description: permission.getDescription(),
       path: permission.getPath(),

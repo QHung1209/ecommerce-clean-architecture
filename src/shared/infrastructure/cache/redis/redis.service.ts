@@ -58,10 +58,8 @@ export class RedisService implements OnModuleDestroy {
     try {
       const value = await this.client.get(key);
       if (!value) {
-        this.logger.debug(`Cache GET: ${key} - MISS`);
         return null;
       }
-      this.logger.debug(`Cache GET: ${key} - HIT`);
       return JSON.parse(value) as T;
     } catch (error) {
       this.logger.error(`Error getting cache key ${key}:`, error);
@@ -80,10 +78,8 @@ export class RedisService implements OnModuleDestroy {
       const stringValue = JSON.stringify(value);
       if (ttl) {
         await this.client.setex(key, ttl, stringValue);
-        this.logger.debug(`Cache SET: ${key} with TTL: ${ttl}s`);
       } else {
         await this.client.set(key, stringValue);
-        this.logger.debug(`Cache SET: ${key} without TTL`);
       }
     } catch (error) {
       this.logger.error(`Error setting cache key ${key}:`, error);
@@ -97,7 +93,6 @@ export class RedisService implements OnModuleDestroy {
   async del(key: string): Promise<void> {
     try {
       await this.client.del(key);
-      this.logger.debug(`Cache DEL: ${key}`);
     } catch (error) {
       this.logger.error(`Error deleting cache key ${key}:`, error);
     }
@@ -111,7 +106,6 @@ export class RedisService implements OnModuleDestroy {
     try {
       if (keys.length > 0) {
         await this.client.del(...keys);
-        this.logger.debug(`Cache DEL MANY: ${keys.join(', ')}`);
       }
     } catch (error) {
       this.logger.error(`Error deleting multiple cache keys:`, error);
@@ -127,9 +121,6 @@ export class RedisService implements OnModuleDestroy {
       const keys = await this.client.keys(pattern);
       if (keys.length > 0) {
         await this.client.del(...keys);
-        this.logger.debug(
-          `Cache DEL PATTERN: ${pattern} (deleted ${keys.length} keys)`,
-        );
       }
     } catch (error) {
       this.logger.error(`Error deleting keys with pattern ${pattern}:`, error);
@@ -142,7 +133,7 @@ export class RedisService implements OnModuleDestroy {
   async reset(): Promise<void> {
     try {
       await this.client.flushdb();
-      this.logger.debug('Cache RESET: All keys cleared');
+      this.logger.warn('Cache RESET: All keys cleared');
     } catch (error) {
       this.logger.error('Error resetting cache:', error);
     }
@@ -185,7 +176,6 @@ export class RedisService implements OnModuleDestroy {
   async expire(key: string, seconds: number): Promise<void> {
     try {
       await this.client.expire(key, seconds);
-      this.logger.debug(`Cache EXPIRE: ${key} set to ${seconds}s`);
     } catch (error) {
       this.logger.error(`Error setting expiration for key ${key}:`, error);
     }

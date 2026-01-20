@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { PermissionModule } from './permission/permission.module';
 import { ConfigModule } from '@nestjs/config';
 import { RoleModule } from './role/role.module';
+import { DeviceModule } from './device/device.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { RoleModule } from './role/role.module';
     AuthModule,
     PermissionModule,
     RoleModule,
+    DeviceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

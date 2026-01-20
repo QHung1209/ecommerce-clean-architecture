@@ -8,9 +8,11 @@ import { UpdatePermissionUseCase } from './application/use-cases/update-permissi
 import { GetPermissionUseCase } from './application/use-cases/get-permission.use-case';
 import { ListPermissionsUseCase } from './application/use-cases/list-permissions.use-case';
 import { PermissionController } from './presentation/controllers/permission.controller';
+import { RoleModule } from 'src/role/role.module';
+import { forwardRef } from '@nestjs/common';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [forwardRef(() => RoleModule)],
   providers: [
     {
       provide: PERMISSION_REPOSITORY,

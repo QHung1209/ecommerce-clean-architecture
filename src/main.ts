@@ -1,11 +1,10 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { TransformInterceptor } from './shared/presentation/interceptors/transform.interceptor';
 import { LoggingInterceptor } from './shared/presentation/interceptors/logging.interceptor';
 import { RedisIoAdapter } from './shared/infrastructure/cache/redis/redis-io.adapter';
 import { RedisService } from './shared/infrastructure/cache/redis/redis.service';
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -23,6 +22,7 @@ async function bootstrap() {
       transform: true, // Auto-transform payloads to DTO instances
     }),
   );
+
   app.useGlobalInterceptors(new LoggingInterceptor());
   app.useGlobalInterceptors(new TransformInterceptor());
   await app.listen(process.env.PORT || 3003);

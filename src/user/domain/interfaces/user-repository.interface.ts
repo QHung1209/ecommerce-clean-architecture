@@ -1,12 +1,9 @@
-import { CreateUserDto } from 'src/user/presentation/dto/create-user.dto';
 import { User, UserProps } from '../entities/user.entity';
+import { BaseRepositoryInterface } from 'src/shared/domain/interfaces/base-repository.interface';
 
-export interface UserRepositoryInterface {
-  create(data: CreateUserDto): Promise<User>;
-  findById(id: number): Promise<User | null>;
+export interface UserRepositoryInterface extends BaseRepositoryInterface<User, number> {
+  save(user: User): Promise<User>
   findByEmail(email: string): Promise<User | null>;
-  findAll(): Promise<User[]>;
   findByRoleId(roleId: number): Promise<User[]>;
-  update(id: number, data: UserProps): Promise<User>;
-  delete(id: number): Promise<void>;
+  getTokenVersionByUserId(id: number): Promise<number | null>;
 }

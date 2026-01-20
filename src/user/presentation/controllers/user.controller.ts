@@ -7,8 +7,9 @@ import {
   Post,
   Body,
   UseGuards,
+  Query,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/presentation/guards/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/auth/infrastructure/guards/jwt-auth.guard';
 import { UserStatus } from 'src/user/domain/entities/user.entity';
 import { CreateUserUseCase } from 'src/user/application/use-cases/create-user.use-case';
 import { GetUserUseCase } from 'src/user/application/use-cases/get-user.use-case';
@@ -19,9 +20,9 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { UserResponseDto } from '../dto/user-response.dto';
 import { UserResponseMapper } from '../mappers/user-response.mapper';
+import { SharedQueryDto } from 'src/shared/presentation/dto/shared.dto';
 
 @Controller('users')
-@UseGuards(JwtAuthGuard)
 export class UserController {
   constructor(
     private readonly createUserUseCase: CreateUserUseCase,
@@ -32,8 +33,8 @@ export class UserController {
   ) {}
 
   @Get()
-  async findAll(): Promise<UserResponseDto[]> {
-    const users = await this.listUsersUseCase.execute();
+  async findAll(@Query() query: SharedQueryDto): Promise<UserResponseDto[]> {
+    const users = await this.listUsersUseCase.execute(query);
     return users.map((user) => UserResponseMapper.toResponse(user));
   }
 
@@ -45,11 +46,7 @@ export class UserController {
 
   @Post()
   async create(@Body() body: CreateUserDto): Promise<UserResponseDto> {
-    const userData = {
-      ...body,
-      status: body.status || UserStatus.INACTIVE,
-    };
-    const newUser = await this.createUserUseCase.execute(userData);
+    const newUser = await this.createUserUseCase.execute(body);
     return UserResponseMapper.toResponse(newUser);
   }
 
@@ -57,9 +54,8 @@ export class UserController {
   async update(
     @Param('id') id: number,
     @Body() body: UpdateUserDto,
-  ): Promise<UserResponseDto> {
-    const updatedUser = await this.updateUserUseCase.execute(id, body);
-    return UserResponseMapper.toResponse(updatedUser);
+  ): Promise<void> {
+    await this.updateUserUseCase.execute(id, body);
   }
 
   @Delete(':id')

@@ -16,7 +16,7 @@ import { GetPermissionUseCase } from 'src/permission/application/use-cases/get-p
 import { ListPermissionsUseCase } from 'src/permission/application/use-cases/list-permissions.use-case';
 import { UpdatePermissionUseCase } from 'src/permission/application/use-cases/update-permission.use-case';
 import { CreatePermissionDto } from '../dto/create-permission.dto';
-import { JwtAuthGuard } from 'src/auth/presentation/guards/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/auth/infrastructure/guards/jwt-auth.guard';
 import { UpdatePermissionDto } from '../dto/update-permission.dto';
 import {
   GetPermissionDto,
@@ -25,7 +25,6 @@ import {
 import { PermissionResponseMapper } from '../mappers/permission-response.mapper';
 
 @Controller('permissions')
-@UseGuards(JwtAuthGuard)
 export class PermissionController {
   constructor(
     private readonly getPermissionUseCase: GetPermissionUseCase,
@@ -74,7 +73,7 @@ export class PermissionController {
   }
 
   @Delete(':id')
-  async deletePermission(@Param() param: GetPermissionDto) {
-    await this.deletePermissionUseCase.execute(param.id);
+  async deletePermission(@Param() param: GetPermissionDto, @Req() req: any) {
+    await this.deletePermissionUseCase.execute(param.id, req.user.id);
   }
 }

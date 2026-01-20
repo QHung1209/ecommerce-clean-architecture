@@ -13,6 +13,7 @@ export class CreatePermissionUseCase {
     private readonly permissionRepository: PermissionRepositoryInterface,
   ) {}
   async execute(permission: PermissionProps, createdById: number): Promise<Permission> {
-    return this.permissionRepository.create(permission, createdById);
+    const permissionEntity = Permission.create(permission);
+    return this.permissionRepository.save(permissionEntity, createdById);
   }
 }

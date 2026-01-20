@@ -8,28 +8,43 @@ import { PrismaPermissionMapper } from 'src/permission/infrastructure/repositori
 import { Role, RoleProps } from 'src/role/domain/entities/role.entity';
 
 export class PrismaRoleMapper {
-  static toDomain(role: PrismaRole, permissions: PrismaPermission[]): Role {
+  static toDomain(role: PrismaRole, permissions?: PrismaPermission[]): Role {
     const { id, ...rest } = role;
-    const domainPermissions: Permission[] = permissions.map((p) =>
+    const domainPermissions: Permission[] | undefined = permissions?.map((p) =>
       PrismaPermissionMapper.toDomain(p),
     );
-    return new Role(id, {
+    return Role.create({
       ...rest,
       permissions: domainPermissions,
-    } as RoleProps);
+    }, id);
   }
 
-  static toPersistence(role: Role): Prisma.RoleUncheckedCreateInput {
+  static toCreatePersistence(role: RoleProps, id?: number): Prisma.RoleUncheckedCreateInput {
     return {
-      id: role.id,
-      name: role.getName(),
-      description: role.getDescription(),
-      isActive: role.getIsActive(),
+      id,
+      name: role.name,
+      description: role.description,
+      isActive: role.isActive,
       permissions: {
-        connect: role.getPermissions().map((permission) => ({
-          id: permission.id,
+        connect: role.permissions?.map((permission) => ({
+          id: permission.getId(),
         })),
       },
     };
   }
+
+  static toUpdatePersistence(role: RoleProps, id?: number): Prisma.RoleUncheckedUpdateInput {
+    return {
+      id,
+      name: role.name,
+      description: role.description,
+      isActive: role.isActive,
+      permissions: {
+        set: role.permissions?.map((permission) => ({
+          id: permission.getId(),
+        })),
+      },
+    };
+  }
+
 }

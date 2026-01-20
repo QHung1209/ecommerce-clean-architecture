@@ -3,18 +3,30 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PrismaModule } from '../shared/infrastructure/database/prisma/prisma.module';
 import { UserModule } from '../user/user.module';
-import { JwtService } from './infrastructure/jwt/jwt.service';
-import { PrismaRefreshTokenRepository } from './infrastructure/repositories/prisma/prisma-refresh-token.repository';
+import { AuthJwtService } from './infrastructure/jwt/jwt.service';
 import { LoginUseCase } from './application/use-cases/login.use-case';
 import { LogoutUseCase } from './application/use-cases/logout.use-case';
 import { AuthController } from './presentation/controllers/auth.controller';
-import { JwtAuthGuard } from './presentation/guards/jwt-auth.guard';
+import { JwtAuthGuard } from './infrastructure/guards/jwt-auth.guard';
 import { BcryptPasswordHasher } from '../shared/infrastructure/security/bcrypt-password-hasher.service';
-import { REFRESH_TOKEN_REPOSITORY } from './auth.constants';
+import {
+  AUTH_JWT_SERVICE,
+  PERMISSION_CACHE_SERVICE,
+  REFRESH_TOKEN_REPOSITORY,
+  TOKEN_CACHE_SERVICE,
+  USER_CACHE_SERVICE,
+} from './auth.constants';
 import { PASSWORD_HASHER } from 'src/shared/shared.constants';
 import { RegisterUseCase } from './application/use-cases/register.use-case';
+import { DeviceModule } from 'src/device/device.module';
+import { APP_GUARD } from '@nestjs/core';
+import { PermissionModule } from 'src/permission/permission.module';
+import { PermissionCacheService } from './infrastructure/cache/permission-cache.service';
+import { UserCacheService } from './infrastructure/cache/user-cache.service';
+import { RoleModule } from 'src/role/role.module';
+import { PermissionGuard } from './infrastructure/guards/permission.guard';
+import { TokenCacheService } from './infrastructure/cache/token-cache.service';
 
-// Token for dependency injection
 @Global()
 @Module({
   imports: [
@@ -30,26 +42,50 @@ import { RegisterUseCase } from './application/use-cases/register.use-case';
     }),
     PrismaModule,
     UserModule,
+    PermissionModule,
+    RoleModule,
+    DeviceModule,
   ],
   controllers: [AuthController],
   providers: [
-    // Infrastructure
-    JwtService,
     {
-      provide: REFRESH_TOKEN_REPOSITORY,
-      useClass: PrismaRefreshTokenRepository,
+      provide: AUTH_JWT_SERVICE,
+      useClass: AuthJwtService,
     },
     {
       provide: PASSWORD_HASHER,
       useClass: BcryptPasswordHasher,
     },
-    // Application
+    {
+      provide: USER_CACHE_SERVICE,
+      useClass: UserCacheService,
+    },
+    {
+      provide: PERMISSION_CACHE_SERVICE,
+      useClass: PermissionCacheService,
+    },
+    {
+      provide: TOKEN_CACHE_SERVICE,
+      useClass: TokenCacheService,
+    },
     LoginUseCase,
     LogoutUseCase,
     RegisterUseCase,
-    // Guards
-    JwtAuthGuard,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: PermissionGuard,
+    },
   ],
-  exports: [JwtAuthGuard, JwtService],
+  exports: [
+    AUTH_JWT_SERVICE,
+    USER_CACHE_SERVICE,
+    PERMISSION_CACHE_SERVICE,
+    TOKEN_CACHE_SERVICE,
+    PASSWORD_HASHER,
+  ],
 })
 export class AuthModule {}

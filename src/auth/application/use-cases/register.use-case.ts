@@ -1,62 +1,87 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { REFRESH_TOKEN_REPOSITORY } from 'src/auth/auth.constants';
-import type { RefreshTokenRepositoryInterface } from 'src/auth/domain/interfaces/refresh-token-repository.interface';
-import { JwtService } from 'src/auth/infrastructure/jwt/jwt.service';
+import {
+  AUTH_JWT_SERVICE,
+} from 'src/auth/auth.constants';
+import type { AuthJwtServiceInterface } from 'src/auth/domain/interfaces/auth-jwt.service.interface';
 import { BcryptPasswordHasher } from 'src/shared/infrastructure/security/bcrypt-password-hasher.service';
 import { PASSWORD_HASHER } from 'src/shared/shared.constants';
-import { UserProps, UserStatus } from 'src/user/domain/entities/user.entity';
 import type { UserRepositoryInterface } from 'src/user/domain/interfaces/user-repository.interface';
 import { USER_REPOSITORY } from 'src/user/user.constants';
+import { User } from 'src/user/domain/entities/user.entity';
+import { Email } from 'src/shared/domain/value-objects/email.vo';
+import { Password } from 'src/shared/domain/value-objects/password.vo';
+import { v4 as uuidv4 } from 'uuid';
+
+export interface RegisterCommand {
+  email: string;
+  password: string;
+}
 
 @Injectable()
 export class RegisterUseCase {
   constructor(
     @Inject(PASSWORD_HASHER)
     private readonly passwordHasher: BcryptPasswordHasher,
+
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryInterface,
-    private readonly jwtService: JwtService,
-    @Inject(REFRESH_TOKEN_REPOSITORY)
-    private readonly refreshTokenRepository: RefreshTokenRepositoryInterface,
+
+    @Inject(AUTH_JWT_SERVICE)
+    private readonly jwtService: AuthJwtServiceInterface,
+
   ) {}
 
-  async execute(data: { email: string; password: string }) {
-    const userExists = await this.userRepository.findByEmail(data.email);
-    if (userExists) {
+  async execute(command: RegisterCommand) {
+    const email = Email.create(command.email);
+
+    const existed = await this.userRepository.findByEmail(email.getValue());
+    if (existed) {
       throw new Error('User already exists');
     }
 
-    const hashedPassword = await this.passwordHasher.hash(data.password);
-    const userProps: UserProps = {
-      email: data.email,
+    const rawPassword = Password.create(command.password);
+    const hashedPasswordValue = await this.passwordHasher.hash(
+      rawPassword.getValue(),
+    );
+    const hashedPassword = Password.create(hashedPasswordValue);
+
+    const user = User.register({
+      email,
       password: hashedPassword,
       name: '',
-      phoneNumber: '',
-      status: UserStatus.ACTIVE,
-      roleId: 1,
-    };
-    const user = await this.userRepository.create(userProps);
+    });
+
+    const savedUser = await this.userRepository.save(user);
+
+    const userId = savedUser.getId();
+    if (userId === undefined) {
+      throw new Error('User ID is undefined after saving');
+    }
+
     const accessToken = this.jwtService.generateAccessToken(
-      user.id,
-      user.getEmail(),
+      userId,
+      savedUser.getEmail().getValue(),
+      savedUser.getRoleId(),
+      uuidv4(),
+      savedUser.getTokenVersion(),
     );
+
     const refreshToken = this.jwtService.generateRefreshToken(
-      user.id,
-      user.getEmail(),
+      userId,
+      savedUser.getEmail().getValue(),
+      savedUser.getRoleId(),
+      uuidv4(),
+      savedUser.getTokenVersion(),
     );
 
-    // 5. Store refresh token
-    const expiresAt = this.jwtService.getRefreshTokenExpiration();
-    await this.refreshTokenRepository.create(user.id, refreshToken, expiresAt);
-
-    // 6. Return result
     return {
       accessToken,
       refreshToken,
       user: {
-        id: user.id,
-        email: user.getEmail(),
-        name: user.getName(),
+        id: userId,
+        email: savedUser.getEmail().getValue(),
+        name: savedUser.getName(),
+        roleId: savedUser.getRoleId(),
       },
     };
   }

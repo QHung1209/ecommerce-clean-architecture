@@ -1,17 +1,17 @@
-import { Permission } from "src/permission/domain/entities/permission.entity";
+import { Permission } from 'src/permission/domain/entities/permission.entity';
+import { BaseEntity } from 'src/shared/domain/entities/entity';
 
 export interface RoleProps {
   name: string;
   description: string;
   isActive: boolean;
-  permissions: Permission[] | [];
+  permissions?: Permission[];
 }
 
-export class Role {
-  constructor(
-    public readonly id: number,
-    private props: RoleProps,
-  ) {}
+export class Role extends BaseEntity<RoleProps> {
+  constructor(props: RoleProps, id?: number) {
+    super(props, id);
+  }
 
   getName(): string {
     return this.props.name;
@@ -25,8 +25,8 @@ export class Role {
     return this.props.isActive;
   }
 
-  getPermissions(): Permission[] {
-    return this.props.permissions;
+  getPermissions(): Permission[] | [] {
+    return this.props.permissions || [];
   }
 
   isActive(): boolean {
@@ -39,5 +39,20 @@ export class Role {
 
   deactivate(): void {
     this.props.isActive = false;
+  }
+
+  static create(props: RoleProps, id?: number) {
+    return new Role(props, id);
+  }
+
+  update(props: Partial<RoleProps>) {
+    this.props = { ...this.props, ...props };
+    return this;
+  }
+
+  removePermission(permissionId: number) {
+    this.props.permissions = this.props.permissions?.filter(
+      (permission) => permission.getId() !== permissionId,
+    );
   }
 }

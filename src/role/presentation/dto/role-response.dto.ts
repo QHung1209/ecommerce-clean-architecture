@@ -1,9 +1,9 @@
 export class RoleResponseDto {
-  id: number;
+  id?: number;
   name: string;
   description: string;
   isActive: boolean;
-  permissions: {
+  permissions?: {
     id: number;
     name: string;
     method: string;

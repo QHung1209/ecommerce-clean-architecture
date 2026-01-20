@@ -1,27 +1,29 @@
+import { BaseEntity } from 'src/shared/domain/entities/entity';
+import { Email } from 'src/shared/domain/value-objects/email.vo';
+import { Password } from 'src/shared/domain/value-objects/password.vo';
+
 export enum UserStatus {
   INACTIVE = 'INACTIVE',
   ACTIVE = 'ACTIVE',
 }
 
 export interface UserProps {
-  email: string;
+  email: Email;
   name: string;
-  password: string;
+  password: Password;
   phoneNumber: string;
   avatar?: string;
-  totpSecret?: string;
   status: UserStatus;
-  roleId: number;
+  roleId: number | null;
+  tokenVersion: number;
 }
 
-export class User {
-  constructor(
-    public readonly id: number,
-    private props: UserProps,
-  ) {}
-
+export class User extends BaseEntity<UserProps> {
+  constructor(props: UserProps, id?: number) {
+    super(props, id);
+  }
   // Getters
-  getEmail(): string {
+  getEmail(): Email {
     return this.props.email;
   }
 
@@ -29,7 +31,7 @@ export class User {
     return this.props.name;
   }
 
-  getPassword(): string {
+  getPassword(): Password {
     return this.props.password;
   }
 
@@ -41,21 +43,19 @@ export class User {
     return this.props.avatar;
   }
 
-  getTotpSecret(): string | undefined {
-    return this.props.totpSecret;
-  }
-
   getStatus(): UserStatus {
     return this.props.status;
   }
 
-  getRoleId(): number {
+  getRoleId(): number | null {
     return this.props.roleId;
   }
 
-  // Setters for mutable properties
-  setEmail(email: string): void {
-    // TODO: Add email validation
+  getTokenVersion(): number {
+    return this.props.tokenVersion;
+  }
+
+  setEmail(email: Email): void {
     this.props.email = email;
   }
 
@@ -63,8 +63,7 @@ export class User {
     this.props.name = name;
   }
 
-  setPassword(password: string): void {
-    // Note: Should be hashed before setting
+  setPassword(password: Password): void {
     this.props.password = password;
   }
 
@@ -72,15 +71,15 @@ export class User {
     this.props.phoneNumber = phoneNumber;
   }
 
+  setTokenVersion(tokenVersion: number): void {
+    this.props.tokenVersion = tokenVersion;
+  }
+
   setAvatar(avatar: string): void {
     this.props.avatar = avatar;
   }
 
-  setTotpSecret(totpSecret: string): void {
-    this.props.totpSecret = totpSecret;
-  }
-
-  setRoleId(roleId: number): void {
+  setRoleId(roleId: number | null): void {
     this.props.roleId = roleId;
   }
 
@@ -103,16 +102,49 @@ export class User {
     return this.props.status === UserStatus.ACTIVE;
   }
 
-  // Static factory method for creating new users
-  static create(props: Omit<UserProps, 'status'>): User {
-    return new User(0, {
-      ...props,
-      status: UserStatus.INACTIVE,
-    });
-  }
-
   // Get all props (useful for persistence)
   getProps(): UserProps {
     return { ...this.props };
+  }
+
+  updateProfile(data: {
+    name: string;
+    email: Email;
+    phoneNumber: string;
+    avatar: string;
+    roleId: number | null;
+  }): void {
+    this.props.name = data.name;
+    this.props.email = data.email;
+    this.props.phoneNumber = data.phoneNumber;
+    this.props.avatar = data.avatar;
+    this.props.roleId = data.roleId;
+  }
+
+  static create(
+    props: Omit<UserProps, 'tokenVersion' | 'status'>,
+    id?: number,
+  ): User {
+    return new User(
+      { ...props, tokenVersion: 0, status: UserStatus.ACTIVE },
+      id,
+    );
+  }
+
+  static register(props: {
+    email: Email;
+    password: Password;
+    name: string;
+  }): User {
+    return new User({
+      email: props.email,
+      password: props.password,
+      name: props.name,
+      phoneNumber: '',
+      avatar: '',
+      status: UserStatus.ACTIVE,
+      roleId: 1,
+      tokenVersion: 0,
+    });
   }
 }

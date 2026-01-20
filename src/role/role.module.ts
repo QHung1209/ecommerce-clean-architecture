@@ -7,8 +7,12 @@ import { UpdateRoleUseCase } from './application/use-cases/update-role.use-case'
 import { DeleteRoleUseCase } from './application/use-cases/delete-role.use-case';
 import { GetRoleUseCase } from './application/use-cases/get-role.use-case';
 import { ListRolesUseCase } from './application/use-cases/list-roles.use-case';
+import { PermissionModule } from 'src/permission/permission.module';
+import { UserModule } from 'src/user/user.module';
+import { forwardRef } from '@nestjs/common';
 
 @Module({
+  imports: [forwardRef(() => PermissionModule), UserModule],
   providers: [
     {
       provide: ROLE_REPOSITORY,

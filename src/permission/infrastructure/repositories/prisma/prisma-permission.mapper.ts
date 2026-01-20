@@ -1,13 +1,19 @@
-import { Prisma, Permission as PrismaPermission } from "@prisma/client";
-import { Permission, PermissionProps } from "src/permission/domain/entities/permission.entity";
+import { Prisma, Permission as PrismaPermission } from '@prisma/client';
+import {
+  Permission,
+  PermissionProps,
+} from 'src/permission/domain/entities/permission.entity';
 
 export class PrismaPermissionMapper {
   static toDomain(permission: PrismaPermission): Permission {
     const { id, ...rest } = permission;
-    return new Permission(id, rest as PermissionProps);
+    return Permission.create(rest, id);
   }
 
-  static toPersistence(id: number, permission: PermissionProps): Prisma.PermissionUncheckedCreateInput {
+  static toPersistence(
+    permission: PermissionProps,
+    id?: number, 
+  ): Prisma.PermissionUncheckedCreateInput {
     return {
       id,
       ...permission,

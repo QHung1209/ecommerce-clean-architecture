@@ -27,15 +27,7 @@ export class CreateUserDto {
 
   @IsString()
   @IsOptional()
-  avatar?: string;
-
-  @IsString()
-  @IsOptional()
-  totpSecret?: string;
-
-  @IsEnum(UserStatus)
-  @IsOptional()
-  status?: UserStatus;
+  avatar: string;
 
   @IsNumber()
   @IsNotEmpty()

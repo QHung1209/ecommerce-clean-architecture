@@ -13,9 +13,10 @@ export class AuthResponseMapper {
       accessToken: authData.accessToken,
       refreshToken: authData.refreshToken,
       user: {
-        id: authData.user.id,
-        email: authData.user.getEmail(),
+        id: authData.user.getId(),
+        email: authData.user.getEmail().getValue(),
         name: authData.user.getName(),
+        roleId: authData.user.getRoleId(),
       },
     };
   }

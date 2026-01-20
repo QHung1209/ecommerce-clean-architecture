@@ -1,4 +1,5 @@
 import { HTTPMethod } from '@prisma/client';
+import { BaseEntity } from 'src/shared/domain/entities/entity';
 
 export interface PermissionProps {
   name: string;
@@ -7,11 +8,10 @@ export interface PermissionProps {
   method: HTTPMethod;
 }
 
-export class Permission {
-  constructor(
-    public readonly id: number,
-    private props: PermissionProps,
-  ) {}
+export class Permission extends BaseEntity<PermissionProps> {
+  constructor(props: PermissionProps, id?: number) {
+    super(props, id);
+  }
 
   getName(): string {
     return this.props.name;
@@ -34,5 +34,13 @@ export class Permission {
       id: this.id,
       ...this.props,
     };
+  }
+
+  static create(props: PermissionProps, id?: number): Permission {
+    return new Permission(props, id);
+  }
+
+  update(props: PermissionProps) {
+    this.props = { ...this.props, ...props };
   }
 }
