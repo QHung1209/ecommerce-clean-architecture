@@ -1,11 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import {
-  AUTH_JWT_SERVICE,
-} from 'src/auth/auth.constants';
-import type { AuthJwtServiceInterface } from 'src/auth/domain/interfaces/auth-jwt.service.interface';
-import { BcryptPasswordHasher } from 'src/shared/infrastructure/security/bcrypt-password-hasher.service';
+import { AUTH_JWT_SERVICE } from 'src/auth/auth.constants';
+import type { IAuthJwtService } from 'src/auth/domain/interfaces/auth-jwt.service.interface';
+import { BcryptPasswordHasher } from 'src/shared/infrastructure/securities/bcrypt-password-hasher.service';
 import { PASSWORD_HASHER } from 'src/shared/shared.constants';
-import type { UserRepositoryInterface } from 'src/user/domain/interfaces/user-repository.interface';
+import type { IUserRepository } from 'src/user/domain/interfaces/user-repository.interface';
 import { USER_REPOSITORY } from 'src/user/user.constants';
 import { User } from 'src/user/domain/entities/user.entity';
 import { Email } from 'src/shared/domain/value-objects/email.vo';
@@ -24,11 +22,10 @@ export class RegisterUseCase {
     private readonly passwordHasher: BcryptPasswordHasher,
 
     @Inject(USER_REPOSITORY)
-    private readonly userRepository: UserRepositoryInterface,
+    private readonly userRepository: IUserRepository,
 
     @Inject(AUTH_JWT_SERVICE)
-    private readonly jwtService: AuthJwtServiceInterface,
-
+    private readonly jwtService: IAuthJwtService,
   ) {}
 
   async execute(command: RegisterCommand) {
@@ -43,11 +40,10 @@ export class RegisterUseCase {
     const hashedPasswordValue = await this.passwordHasher.hash(
       rawPassword.getValue(),
     );
-    const hashedPassword = Password.create(hashedPasswordValue);
 
     const user = User.register({
       email,
-      password: hashedPassword,
+      password: hashedPasswordValue,
       name: '',
     });
 

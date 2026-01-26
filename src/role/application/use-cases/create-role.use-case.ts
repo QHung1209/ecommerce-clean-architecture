@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import type { RoleRepositoryInterface } from 'src/role/domain/interfaces/role-repository.interface';
+import type { IRoleRepository } from 'src/role/domain/interfaces/role-repository.interface';
 import { Role } from 'src/role/domain/entities/role.entity';
 import { ROLE_REPOSITORY } from 'src/role/role.constants';
 import { PERMISSION_REPOSITORY } from 'src/permission/permission.constants';
-import type { PermissionRepositoryInterface } from 'src/permission/domain/interfaces/permission-repository.interface';
+import type { IPermissionRepository } from 'src/permission/domain/interfaces/permission-repository.interface';
 export interface CreateRoleCommand {
   name: string;
   description: string;
@@ -14,10 +14,10 @@ export interface CreateRoleCommand {
 export class CreateRoleUseCase {
   constructor(
     @Inject(ROLE_REPOSITORY)
-    private readonly roleRepository: RoleRepositoryInterface,
+    private readonly roleRepository: IRoleRepository,
 
     @Inject(PERMISSION_REPOSITORY)
-    private readonly permissionRepository: PermissionRepositoryInterface,
+    private readonly permissionRepository: IPermissionRepository,
   ) {}
 
   async execute(role: CreateRoleCommand, createdById: number): Promise<Role> {

@@ -1,13 +1,13 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import type { PermissionRepositoryInterface } from "src/permission/domain/interfaces/permission-repository.interface";
-import { PERMISSION_REPOSITORY } from "src/permission/permission.constants";
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import type { IPermissionRepository } from 'src/permission/domain/interfaces/permission-repository.interface';
+import { PERMISSION_REPOSITORY } from 'src/permission/permission.constants';
 
 @Injectable()
 export class GetPermissionUseCase {
   constructor(
     @Inject(PERMISSION_REPOSITORY)
-    private readonly permissionRepository: PermissionRepositoryInterface,
-  ){}   
+    private readonly permissionRepository: IPermissionRepository,
+  ) {}
 
   async execute(id: number) {
     const permission = await this.permissionRepository.findById(id);

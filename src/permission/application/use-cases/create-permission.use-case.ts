@@ -3,16 +3,19 @@ import {
   Permission,
   PermissionProps,
 } from 'src/permission/domain/entities/permission.entity';
-import type { PermissionRepositoryInterface } from 'src/permission/domain/interfaces/permission-repository.interface';
+import type { IPermissionRepository } from 'src/permission/domain/interfaces/permission-repository.interface';
 import { PERMISSION_REPOSITORY } from 'src/permission/permission.constants';
 
 @Injectable()
 export class CreatePermissionUseCase {
   constructor(
     @Inject(PERMISSION_REPOSITORY)
-    private readonly permissionRepository: PermissionRepositoryInterface,
+    private readonly permissionRepository: IPermissionRepository,
   ) {}
-  async execute(permission: PermissionProps, createdById: number): Promise<Permission> {
+  async execute(
+    permission: PermissionProps,
+    createdById: number,
+  ): Promise<Permission> {
     const permissionEntity = Permission.create(permission);
     return this.permissionRepository.save(permissionEntity, createdById);
   }

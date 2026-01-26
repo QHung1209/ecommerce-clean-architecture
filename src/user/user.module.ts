@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule } from '../shared/infrastructure/database/prisma/prisma.module';
+import { PrismaModule } from '../shared/infrastructure/databases/prisma/prisma.module';
 import { PrismaUserRepository } from './infrastructure/repositories/prisma/prisma-user.repository';
 import { CreateUserUseCase } from './application/use-cases/create-user.use-case';
 import { GetUserUseCase } from './application/use-cases/get-user.use-case';

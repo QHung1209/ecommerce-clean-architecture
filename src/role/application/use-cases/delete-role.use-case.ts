@@ -1,17 +1,17 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import type { RoleRepositoryInterface } from 'src/role/domain/interfaces/role-repository.interface';
+import type { IRoleRepository } from 'src/role/domain/interfaces/role-repository.interface';
 import { ROLE_REPOSITORY } from 'src/role/role.constants';
-import type { UserRepositoryInterface } from 'src/user/domain/interfaces/user-repository.interface';
+import type { IUserRepository } from 'src/user/domain/interfaces/user-repository.interface';
 import { USER_REPOSITORY } from 'src/user/user.constants';
 
 @Injectable()
 export class DeleteRoleUseCase {
   constructor(
     @Inject(ROLE_REPOSITORY)
-    private readonly roleRepository: RoleRepositoryInterface,
+    private readonly roleRepository: IRoleRepository,
 
     @Inject(USER_REPOSITORY)
-    private readonly userRepository: UserRepositoryInterface,
+    private readonly userRepository: IUserRepository,
   ) {}
 
   async execute(id: number): Promise<void> {

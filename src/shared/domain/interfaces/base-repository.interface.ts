@@ -1,7 +1,7 @@
-import { SharedQueryInterface } from './query.interface';
+import { ISharedQuery } from './query.interface';
 
-export interface BaseRepositoryInterface<T, ID = number> {
+export interface IBaseRepository<T, ID = number> {
   findById(id: ID): Promise<T | null>;
-  findAll(query: SharedQueryInterface): Promise<T[]>;
+  findAll(query: ISharedQuery): Promise<T[]>;
   delete(id: ID): Promise<void>;
 }

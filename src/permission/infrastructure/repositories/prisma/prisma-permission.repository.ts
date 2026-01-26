@@ -3,13 +3,13 @@ import {
   Permission,
   PermissionProps,
 } from 'src/permission/domain/entities/permission.entity';
-import { PermissionRepositoryInterface } from 'src/permission/domain/interfaces/permission-repository.interface';
-import { PrismaService } from 'src/shared/infrastructure/database/prisma/prisma.service';
+import { IPermissionRepository } from 'src/permission/domain/interfaces/permission-repository.interface';
+import { PrismaService } from 'src/shared/infrastructure/databases/prisma/prisma.service';
 import { PrismaPermissionMapper } from './prisma-permission.mapper';
 import { ListPermissionsDto } from 'src/permission/presentation/dto/get-permission.dto';
 
 @Injectable()
-export class PrismaPermissionRepository implements PermissionRepositoryInterface {
+export class PrismaPermissionRepository implements IPermissionRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async save(permission: Permission, changeById: number): Promise<Permission> {

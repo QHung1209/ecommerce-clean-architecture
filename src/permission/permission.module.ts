@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule } from 'src/shared/infrastructure/database/prisma/prisma.module';
+import { PrismaModule } from 'src/shared/infrastructure/databases/prisma/prisma.module';
 import { PERMISSION_REPOSITORY } from './permission.constants';
 import { PrismaPermissionRepository } from './infrastructure/repositories/prisma/prisma-permission.repository';
 import { CreatePermissionUseCase } from './application/use-cases/create-permission.use-case';

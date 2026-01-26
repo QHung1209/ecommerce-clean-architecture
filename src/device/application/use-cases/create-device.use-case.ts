@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DEVICE_REPOSITORY } from 'src/device/device.constants';
 import { Device, DeviceProps } from 'src/device/domain/entities/device.entity';
-import type { DeviceRepositoryInterface } from 'src/device/domain/interfaces/device-repository.interface';
+import type { IDeviceRepository } from 'src/device/domain/interfaces/device-repository.interface';
 export interface CreateDeviceCommand {
   userAgent: string;
   ip: string;
@@ -12,7 +12,7 @@ export interface CreateDeviceCommand {
 export class CreateDeviceUseCase {
   constructor(
     @Inject(DEVICE_REPOSITORY)
-    private readonly deviceRepository: DeviceRepositoryInterface,
+    private readonly deviceRepository: IDeviceRepository,
   ) {}
 
   async execute(data: CreateDeviceCommand) {

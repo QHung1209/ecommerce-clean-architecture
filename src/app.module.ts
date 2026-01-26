@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PrismaModule } from './shared/infrastructure/database/prisma/prisma.module';
+import { PrismaModule } from './shared/infrastructure/databases/prisma/prisma.module';
 import { RedisModule } from './shared/infrastructure/cache/redis/redis.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
@@ -9,6 +9,8 @@ import { PermissionModule } from './permission/permission.module';
 import { ConfigModule } from '@nestjs/config';
 import { RoleModule } from './role/role.module';
 import { DeviceModule } from './device/device.module';
+import { VerificationCodeModule } from './verification-code/verification-code.module';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { DeviceModule } from './device/device.module';
     PermissionModule,
     RoleModule,
     DeviceModule,
+    VerificationCodeModule,
+    SharedModule,
   ],
   controllers: [AppController],
   providers: [AppService],

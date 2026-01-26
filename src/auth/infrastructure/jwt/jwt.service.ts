@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { JwtService as NestJwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import {
-  AuthJwtServiceInterface,
+  IAuthJwtService,
   JwtPayload,
 } from 'src/auth/domain/interfaces/auth-jwt.service.interface';
 
 @Injectable()
-export class AuthJwtService implements AuthJwtServiceInterface {
+export class AuthJwtService implements IAuthJwtService {
   constructor(
     private readonly jwtService: NestJwtService,
     private readonly configService: ConfigService,

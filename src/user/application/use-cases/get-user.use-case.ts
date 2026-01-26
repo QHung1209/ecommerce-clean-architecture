@@ -1,13 +1,13 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { USER_REPOSITORY } from 'src/user/user.constants';
-import type { UserRepositoryInterface } from 'src/user/domain/interfaces/user-repository.interface';
+import type { IUserRepository } from 'src/user/domain/interfaces/user-repository.interface';
 import { User } from 'src/user/domain/entities/user.entity';
 
 @Injectable()
 export class GetUserUseCase {
   constructor(
     @Inject(USER_REPOSITORY)
-    private readonly userRepository: UserRepositoryInterface,
+    private readonly userRepository: IUserRepository,
   ) {}
 
   async execute(id: number): Promise<User> {

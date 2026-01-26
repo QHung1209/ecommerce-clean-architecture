@@ -1,16 +1,16 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import type { PermissionRepositoryInterface } from 'src/permission/domain/interfaces/permission-repository.interface';
+import type { IPermissionRepository } from 'src/permission/domain/interfaces/permission-repository.interface';
 import { PERMISSION_REPOSITORY } from 'src/permission/permission.constants';
-import type { RoleRepositoryInterface } from 'src/role/domain/interfaces/role-repository.interface';
+import type { IRoleRepository } from 'src/role/domain/interfaces/role-repository.interface';
 import { ROLE_REPOSITORY } from 'src/role/role.constants';
 
 @Injectable()
 export class DeletePermissionUseCase {
   constructor(
     @Inject(PERMISSION_REPOSITORY)
-    private readonly permissionRepository: PermissionRepositoryInterface,
+    private readonly permissionRepository: IPermissionRepository,
     @Inject(ROLE_REPOSITORY)
-    private readonly roleRepository: RoleRepositoryInterface,
+    private readonly roleRepository: IRoleRepository,
   ) {}
   async execute(id: number, userId: number): Promise<void> {
     const permissionExisted = await this.permissionRepository.findById(id);

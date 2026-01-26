@@ -1,12 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { User, UserProps } from 'src/user/domain/entities/user.entity';
-import { UserRepositoryInterface } from 'src/user/domain/interfaces/user-repository.interface';
-import { PrismaUserMapper } from './prisma-user.mapper';
-import { PrismaService } from 'src/shared/infrastructure/database/prisma/prisma.service';
+import { IUserRepository } from 'src/user/domain/interfaces/user-repository.interface';
+import { PrismaUserMapper } from '../../mappers/prisma-user.mapper';
+import { PrismaService } from 'src/shared/infrastructure/databases/prisma/prisma.service';
+import { PASSWORD_HASHER } from 'src/shared/shared.constants';
+import { Inject } from '@nestjs/common';
+import { BcryptPasswordHasher } from 'src/shared/infrastructure/securities/bcrypt-password-hasher.service';
+import { Password } from 'src/shared/domain/value-objects/password.vo';
 
 @Injectable()
-export class PrismaUserRepository implements UserRepositoryInterface {
-  constructor(private readonly prisma: PrismaService) {}
+export class PrismaUserRepository implements IUserRepository {
+  constructor(
+    private readonly prisma: PrismaService,
+    @Inject(PASSWORD_HASHER)
+    private readonly passwordHasher: BcryptPasswordHasher,
+  ) {}
 
   async save(user: User): Promise<User> {
     const persistenceData = PrismaUserMapper.toPersistence(

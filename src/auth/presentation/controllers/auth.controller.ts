@@ -17,12 +17,21 @@ import { RegisterDto } from '../dto/register.dto';
 import { RegisterUseCase } from 'src/auth/application/use-cases/register.use-case';
 import { Public } from '../../infrastructure/decorators/public.decorator';
 import { SkipPermission } from 'src/auth/infrastructure/decorators/skip-permission.decorator';
+import { ForgotPasswordDto } from '../dto/forgot-password.dto';
+import { ForgorPasswordUseCase } from 'src/auth/application/use-cases/forgot-password.use-case';
+import { VerifyOtpDto } from '../dto/verify-otp.dto';
+import { VerifyResetPasswordOtpUseCase } from 'src/auth/application/use-cases/verify-reset-password-otp.use-case';
+import { ResetPasswordUseCase } from 'src/auth/application/use-cases/reset-pasword.use-case';
+import { ResetPasswordDto } from '../dto/reset-password.dto';
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly loginUseCase: LoginUseCase,
     private readonly logoutUseCase: LogoutUseCase,
     private readonly registerUseCase: RegisterUseCase,
+    private readonly forgotPasswordUseCase: ForgorPasswordUseCase,
+    private readonly verifyResetPasswordOtpUseCase: VerifyResetPasswordOtpUseCase,
+    private readonly resetPasswordUseCase: ResetPasswordUseCase,
   ) {}
 
   @Public()
@@ -61,5 +70,37 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async register(@Body() registerDto: RegisterDto): Promise<AuthResponseDto> {
     return await this.registerUseCase.execute(registerDto);
+  }
+
+  @Public()
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  async forgotPassword(
+    @Body() forgotPasswordDto: ForgotPasswordDto,
+  ): Promise<void> {
+    await this.forgotPasswordUseCase.execute(forgotPasswordDto.email);
+  }
+
+  @Public()
+  @Post('verify-otp')
+  @HttpCode(HttpStatus.OK)
+  async verifyOtp(@Body() verifyOtpDto: VerifyOtpDto): Promise<string> {
+    return await this.verifyResetPasswordOtpUseCase.execute(
+      verifyOtpDto.email,
+      verifyOtpDto.code,
+    );
+  }
+
+  @Public()
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  async resetPassword(
+    @Body() resetPasswordDto: ResetPasswordDto,
+  ): Promise<void> {
+    await this.resetPasswordUseCase.execute(
+      resetPasswordDto.email,
+      resetPasswordDto.password,
+      resetPasswordDto.token,
+    );
   }
 }

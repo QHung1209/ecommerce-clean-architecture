@@ -1,3 +1,5 @@
+import { BadRequestException } from "@nestjs/common";
+
 export class Password {
   private constructor(private readonly value: string) {
     if (!this.isValid(value)) {
@@ -33,7 +35,7 @@ export class Password {
     }
 
     if (errors.length > 0) {
-      throw new Error(`Invalid password: ${errors.join(', ')}`);
+      throw new BadRequestException(`Invalid password: ${errors.join(', ')}`);
     }
     return true;
   }

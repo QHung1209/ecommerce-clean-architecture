@@ -14,20 +14,20 @@ import {
   USER_CACHE_SERVICE,
 } from 'src/auth/auth.constants';
 import type {
-  AuthJwtServiceInterface,
+  IAuthJwtService,
   JwtPayload,
 } from 'src/auth/domain/interfaces/auth-jwt.service.interface';
-import type { UserCacheServiceInterface } from 'src/auth/domain/interfaces/user-cache.service.interface';
-import type { TokenCacheServiceInterface } from 'src/auth/domain/interfaces/token-cache.service.interface';
+import type { IUserCacheService } from 'src/auth/domain/interfaces/user-cache.service.interface';
+import type { ITokenCacheService } from 'src/auth/domain/interfaces/token-cache.service.interface';
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   constructor(
     @Inject(AUTH_JWT_SERVICE)
-    private readonly jwtService: AuthJwtServiceInterface,
+    private readonly jwtService: IAuthJwtService,
     @Inject(USER_CACHE_SERVICE)
-    private readonly userCacheService: UserCacheServiceInterface,
+    private readonly userCacheService: IUserCacheService,
     @Inject(TOKEN_CACHE_SERVICE)
-    private readonly tokenCacheService: TokenCacheServiceInterface,
+    private readonly tokenCacheService: ITokenCacheService,
     private readonly reflector: Reflector,
   ) {}
 

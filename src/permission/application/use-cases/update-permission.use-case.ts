@@ -4,7 +4,7 @@ import {
   Permission,
   PermissionProps,
 } from 'src/permission/domain/entities/permission.entity';
-import type { PermissionRepositoryInterface } from 'src/permission/domain/interfaces/permission-repository.interface';
+import type { IPermissionRepository } from 'src/permission/domain/interfaces/permission-repository.interface';
 import { PERMISSION_REPOSITORY } from 'src/permission/permission.constants';
 export interface UpdatePermissionCommand {
   name: string;
@@ -16,7 +16,7 @@ export interface UpdatePermissionCommand {
 export class UpdatePermissionUseCase {
   constructor(
     @Inject(PERMISSION_REPOSITORY)
-    private readonly permissionRepository: PermissionRepositoryInterface,
+    private readonly permissionRepository: IPermissionRepository,
   ) {}
   async execute(
     id: number,

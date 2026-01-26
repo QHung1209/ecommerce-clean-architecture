@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Email } from 'src/shared/domain/value-objects/email.vo';
 import { User, UserProps } from 'src/user/domain/entities/user.entity';
-import type { UserRepositoryInterface } from 'src/user/domain/interfaces/user-repository.interface';
+import type { IUserRepository } from 'src/user/domain/interfaces/user-repository.interface';
 import { USER_REPOSITORY } from 'src/user/user.constants';
 
 export interface UpdateUserCommand {
@@ -16,7 +16,7 @@ export interface UpdateUserCommand {
 export class UpdateUserUseCase {
   constructor(
     @Inject(USER_REPOSITORY)
-    private readonly userRepository: UserRepositoryInterface,
+    private readonly userRepository: IUserRepository,
   ) {}
 
   async execute(id: number, data: UpdateUserCommand): Promise<User> {

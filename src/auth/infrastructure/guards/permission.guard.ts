@@ -5,14 +5,14 @@ import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 import { Request } from 'express';
 import { HTTPMethod } from '@prisma/client';
 import { PERMISSION_CACHE_SERVICE } from 'src/auth/auth.constants';
-import type { PermissionCacheServiceInterface } from 'src/auth/domain/interfaces/permission-cache.service.interface';
+import type { IPermissionCacheService } from 'src/auth/domain/interfaces/permission-cache.service.interface';
 import { IS_SKIP_PERMISSION_KEY } from '../decorators/skip-permission.decorator';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
   constructor(
     @Inject(PERMISSION_CACHE_SERVICE)
-    private readonly permissionCacheService: PermissionCacheServiceInterface,
+    private readonly permissionCacheService: IPermissionCacheService,
     private readonly reflector: Reflector,
   ) {}
   async canActivate(context: ExecutionContext) {

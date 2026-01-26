@@ -12,7 +12,7 @@ export class PrismaUserMapper {
         ...rest,
         avatar: avatar || undefined,
         email: Email.create(email),
-        password: Password.create(password),
+        password: password,
       },
       id,
     );
@@ -24,7 +24,7 @@ export class PrismaUserMapper {
     return {
       id,
       email: userProps.email.getValue(),
-      password: userProps.password.getValue(),
+      password: userProps.password,
       name: userProps.name,
       phoneNumber: userProps.phoneNumber,
       avatar: userProps.avatar,

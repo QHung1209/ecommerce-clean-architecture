@@ -1,16 +1,10 @@
-import { SharedQueryInterface } from 'src/shared/domain/interfaces/query.interface';
+import { ISharedQuery } from 'src/shared/domain/interfaces/query.interface';
 import { Device, DeviceProps } from '../entities/device.entity';
-import { BaseRepositoryInterface } from 'src/shared/domain/interfaces/base-repository.interface';
+import { IBaseRepository } from 'src/shared/domain/interfaces/base-repository.interface';
 
-export interface DeviceRepositoryInterface extends BaseRepositoryInterface<
-  Device,
-  number
-> {
+export interface IDeviceRepository extends IBaseRepository<Device, number> {
   save(device: Device): Promise<Device>;
-  findAllByUserId(
-    query: SharedQueryInterface,
-    userId: number,
-  ): Promise<Device[]>;
+  findAllByUserId(query: ISharedQuery, userId: number): Promise<Device[]>;
   deleteAll(userId: number): Promise<void>;
   findByUserIdAndDeviceAndIp(
     userId: number,

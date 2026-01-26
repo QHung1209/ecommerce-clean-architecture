@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import type { UserRepositoryInterface } from 'src/user/domain/interfaces/user-repository.interface';
+import type { IUserRepository } from 'src/user/domain/interfaces/user-repository.interface';
 import { USER_REPOSITORY } from 'src/user/user.constants';
 import { CreateUserDto } from 'src/user/presentation/dto/create-user.dto';
 import { User } from 'src/user/domain/entities/user.entity';
@@ -18,14 +18,14 @@ export interface CreateUserCommand {
 export class CreateUserUseCase {
   constructor(
     @Inject(USER_REPOSITORY)
-    private readonly userRepository: UserRepositoryInterface,
+    private readonly userRepository: IUserRepository,
   ) {}
 
   async execute(data: CreateUserCommand): Promise<User> {
     const user = User.create({
       name: data.name,
       email: Email.create(data.email),
-      password: Password.create(data.password),
+      password: data.password,
       phoneNumber: data.phoneNumber,
       avatar: data.avatar,
       roleId: data.roleId,

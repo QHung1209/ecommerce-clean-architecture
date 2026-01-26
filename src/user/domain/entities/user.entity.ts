@@ -10,7 +10,7 @@ export enum UserStatus {
 export interface UserProps {
   email: Email;
   name: string;
-  password: Password;
+  password: string;
   phoneNumber: string;
   avatar?: string;
   status: UserStatus;
@@ -31,7 +31,7 @@ export class User extends BaseEntity<UserProps> {
     return this.props.name;
   }
 
-  getPassword(): Password {
+  getPassword(): string {
     return this.props.password;
   }
 
@@ -63,7 +63,7 @@ export class User extends BaseEntity<UserProps> {
     this.props.name = name;
   }
 
-  setPassword(password: Password): void {
+  setPassword(password: string): void {
     this.props.password = password;
   }
 
@@ -133,7 +133,7 @@ export class User extends BaseEntity<UserProps> {
 
   static register(props: {
     email: Email;
-    password: Password;
+    password: string;
     name: string;
   }): User {
     return new User({

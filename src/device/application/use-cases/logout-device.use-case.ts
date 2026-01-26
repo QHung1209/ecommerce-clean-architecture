@@ -1,23 +1,20 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-  TOKEN_CACHE_SERVICE,
-} from 'src/auth/auth.constants';
-import type { TokenCacheServiceInterface } from 'src/auth/domain/interfaces/token-cache.service.interface';
+import { TOKEN_CACHE_SERVICE } from 'src/auth/auth.constants';
+import type { ITokenCacheService } from 'src/auth/domain/interfaces/token-cache.service.interface';
 import { DEVICE_REPOSITORY } from 'src/device/device.constants';
-import type { DeviceRepositoryInterface } from 'src/device/domain/interfaces/device-repository.interface';
+import type { IDeviceRepository } from 'src/device/domain/interfaces/device-repository.interface';
 
 @Injectable()
 export class LogoutDeviceUseCase {
   constructor(
     @Inject(DEVICE_REPOSITORY)
-    private readonly deviceRepository: DeviceRepositoryInterface,
+    private readonly deviceRepository: IDeviceRepository,
 
     @Inject(TOKEN_CACHE_SERVICE)
-    private readonly tokenCacheService: TokenCacheServiceInterface,
+    private readonly tokenCacheService: ITokenCacheService,
 
     private readonly configService: ConfigService,
-
   ) {}
 
   async execute(id: number) {

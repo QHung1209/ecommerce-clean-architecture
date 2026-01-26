@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Device, DeviceProps } from 'src/device/domain/entities/device.entity';
-import { DeviceRepositoryInterface } from 'src/device/domain/interfaces/device-repository.interface';
-import { PrismaService } from 'src/shared/infrastructure/database/prisma/prisma.service';
+import { IDeviceRepository } from 'src/device/domain/interfaces/device-repository.interface';
+import { PrismaService } from 'src/shared/infrastructure/databases/prisma/prisma.service';
 import { PrismaDeviceMapper } from './prisma-device.mapper';
-import { SharedQueryInterface } from 'src/shared/domain/interfaces/query.interface';
+import { ISharedQuery } from 'src/shared/domain/interfaces/query.interface';
 
 @Injectable()
-export class PrismaDeviceRepository implements DeviceRepositoryInterface {
+export class PrismaDeviceRepository implements IDeviceRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async save(device: Device) {
@@ -99,7 +99,7 @@ export class PrismaDeviceRepository implements DeviceRepositoryInterface {
     return await this.prisma.device.count();
   }
 
-  async findAll(query: SharedQueryInterface): Promise<Device[]> {
+  async findAll(query: ISharedQuery): Promise<Device[]> {
     const devices = await this.prisma.device.findMany({
       take: query.limit,
       skip: (query.page - 1) * query.limit,

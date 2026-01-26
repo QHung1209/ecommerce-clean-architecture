@@ -1,6 +1,6 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import type { UserRepositoryInterface } from 'src/user/domain/interfaces/user-repository.interface';
-import type { BcryptPasswordHasher } from 'src/shared/infrastructure/security/bcrypt-password-hasher.service';
+import type { IUserRepository } from 'src/user/domain/interfaces/user-repository.interface';
+import type { BcryptPasswordHasher } from 'src/shared/infrastructure/securities/bcrypt-password-hasher.service';
 import { USER_REPOSITORY } from 'src/user/user.constants';
 import {
   AUTH_JWT_SERVICE,
@@ -8,8 +8,8 @@ import {
 } from 'src/auth/auth.constants';
 import { PASSWORD_HASHER } from 'src/shared/shared.constants';
 import { CreateDeviceUseCase } from 'src/device/application/use-cases/create-device.use-case';
-import type { PermissionCacheServiceInterface } from 'src/auth/domain/interfaces/permission-cache.service.interface';
-import type { AuthJwtServiceInterface } from 'src/auth/domain/interfaces/auth-jwt.service.interface';
+import type { IPermissionCacheService } from 'src/auth/domain/interfaces/permission-cache.service.interface';
+import type { IAuthJwtService } from 'src/auth/domain/interfaces/auth-jwt.service.interface';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface LoginResult {
@@ -27,13 +27,13 @@ export interface LoginResult {
 export class LoginUseCase {
   constructor(
     @Inject(USER_REPOSITORY)
-    private readonly userRepository: UserRepositoryInterface,
+    private readonly userRepository: IUserRepository,
     @Inject(PASSWORD_HASHER)
     private readonly passwordHasher: BcryptPasswordHasher,
     @Inject(PERMISSION_CACHE_SERVICE)
-    private readonly permissionCacheService: PermissionCacheServiceInterface,
+    private readonly permissionCacheService: IPermissionCacheService,
     @Inject(AUTH_JWT_SERVICE)
-    private readonly jwtService: AuthJwtServiceInterface,
+    private readonly jwtService: IAuthJwtService,
 
     private readonly createDeviceUseCase: CreateDeviceUseCase,
   ) {}
@@ -51,7 +51,7 @@ export class LoginUseCase {
 
     const isPasswordValid = await this.passwordHasher.compare(
       password,
-      user.getPassword().getValue(),
+      user.getPassword(),
     );
     if (!isPasswordValid) {
       throw new UnauthorizedException('Check your email and password again');

@@ -7,7 +7,7 @@ export interface JwtPayload {
   exp: number;
 }
 
-export interface AuthJwtServiceInterface {
+export interface IAuthJwtService {
   generateAccessToken(
     userId: number,
     email: string,

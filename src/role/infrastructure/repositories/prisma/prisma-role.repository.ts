@@ -1,13 +1,13 @@
 import { Role } from 'src/role/domain/entities/role.entity';
-import { RoleRepositoryInterface } from 'src/role/domain/interfaces/role-repository.interface';
-import { PrismaService } from 'src/shared/infrastructure/database/prisma/prisma.service';
+import { IRoleRepository } from 'src/role/domain/interfaces/role-repository.interface';
+import { PrismaService } from 'src/shared/infrastructure/databases/prisma/prisma.service';
 import { PrismaRoleMapper } from './prisma-role.mapper';
 import { SharedQueryDto } from 'src/shared/presentation/dto/shared.dto';
 import { Injectable } from '@nestjs/common';
 import { HTTPMethod } from '@prisma/client';
 
 @Injectable()
-export class PrismaRoleRepository implements RoleRepositoryInterface {
+export class PrismaRoleRepository implements IRoleRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async save(role: Role, createdById: number): Promise<Role> {

@@ -1,7 +1,7 @@
 import { Permission } from '../entities/permission.entity';
-import { BaseRepositoryInterface } from 'src/shared/domain/interfaces/base-repository.interface';
+import { IBaseRepository } from 'src/shared/domain/interfaces/base-repository.interface';
 
-export interface PermissionRepositoryInterface extends BaseRepositoryInterface<
+export interface IPermissionRepository extends IBaseRepository<
   Permission,
   number
 > {
