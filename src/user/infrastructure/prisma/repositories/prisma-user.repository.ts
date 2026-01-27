@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { User, UserProps } from 'src/user/domain/entities/user.entity';
 import { IUserRepository } from 'src/user/domain/interfaces/user-repository.interface';
-import { PrismaUserMapper } from '../../mappers/prisma-user.mapper';
+import { PrismaUserMapper } from '../mappers/prisma-user.mapper';
 import { PrismaService } from 'src/shared/infrastructure/databases/prisma/prisma.service';
 import { PASSWORD_HASHER } from 'src/shared/shared.constants';
 import { Inject } from '@nestjs/common';

@@ -5,7 +5,7 @@ import {
 } from 'src/permission/domain/entities/permission.entity';
 import { IPermissionRepository } from 'src/permission/domain/interfaces/permission-repository.interface';
 import { PrismaService } from 'src/shared/infrastructure/databases/prisma/prisma.service';
-import { PrismaPermissionMapper } from './prisma-permission.mapper';
+import { PrismaPermissionMapper } from '../mappers/prisma-permission.mapper';
 import { ListPermissionsDto } from 'src/permission/presentation/dto/get-permission.dto';
 
 @Injectable()

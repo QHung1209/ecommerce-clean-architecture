@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ROLE_REPOSITORY } from './role.constants';
-import { PrismaRoleRepository } from './infrastructure/repositories/prisma/prisma-role.repository';
 import { RoleController } from 'src/role/presentation/controllers/role.controller';
 import { CreateRoleUseCase } from './application/use-cases/create-role.use-case';
 import { UpdateRoleUseCase } from './application/use-cases/update-role.use-case';
@@ -10,6 +9,7 @@ import { ListRolesUseCase } from './application/use-cases/list-roles.use-case';
 import { PermissionModule } from 'src/permission/permission.module';
 import { UserModule } from 'src/user/user.module';
 import { forwardRef } from '@nestjs/common';
+import { PrismaRoleRepository } from './infrastructure/prisma/repositories/prisma-role.repository';
 
 @Module({
   imports: [forwardRef(() => PermissionModule), UserModule],

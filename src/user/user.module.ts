@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '../shared/infrastructure/databases/prisma/prisma.module';
-import { PrismaUserRepository } from './infrastructure/repositories/prisma/prisma-user.repository';
+import { PrismaUserRepository } from './infrastructure/prisma/repositories/prisma-user.repository';
 import { CreateUserUseCase } from './application/use-cases/create-user.use-case';
 import { GetUserUseCase } from './application/use-cases/get-user.use-case';
 import { UpdateUserUseCase } from './application/use-cases/update-user.use-case';
@@ -13,12 +13,10 @@ import { USER_REPOSITORY } from './user.constants';
   imports: [PrismaModule],
   controllers: [UserController],
   providers: [
-    // Repository implementation
     {
       provide: USER_REPOSITORY,
       useClass: PrismaUserRepository,
     },
-    // Application Use Cases
     CreateUserUseCase,
     GetUserUseCase,
     UpdateUserUseCase,
@@ -26,7 +24,7 @@ import { USER_REPOSITORY } from './user.constants';
     ListUsersUseCase,
   ],
   exports: [
-    USER_REPOSITORY, // Export repository token for other modules
+    USER_REPOSITORY, 
     CreateUserUseCase,
     GetUserUseCase,
     UpdateUserUseCase,

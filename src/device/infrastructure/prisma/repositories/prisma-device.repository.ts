@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Device, DeviceProps } from 'src/device/domain/entities/device.entity';
 import { IDeviceRepository } from 'src/device/domain/interfaces/device-repository.interface';
 import { PrismaService } from 'src/shared/infrastructure/databases/prisma/prisma.service';
-import { PrismaDeviceMapper } from './prisma-device.mapper';
+import { PrismaDeviceMapper } from '../mappers/prisma-device.mapper';
 import { ISharedQuery } from 'src/shared/domain/interfaces/query.interface';
 
 @Injectable()

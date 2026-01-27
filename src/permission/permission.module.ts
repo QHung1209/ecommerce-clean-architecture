@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule } from 'src/shared/infrastructure/databases/prisma/prisma.module';
 import { PERMISSION_REPOSITORY } from './permission.constants';
-import { PrismaPermissionRepository } from './infrastructure/repositories/prisma/prisma-permission.repository';
+import { PrismaPermissionRepository } from './infrastructure/prisma/repositories/prisma-permission.repository';
 import { CreatePermissionUseCase } from './application/use-cases/create-permission.use-case';
 import { DeletePermissionUseCase } from './application/use-cases/delete-permission.use-case';
 import { UpdatePermissionUseCase } from './application/use-cases/update-permission.use-case';
@@ -14,7 +13,7 @@ import { forwardRef } from '@nestjs/common';
 @Module({
   imports: [forwardRef(() => RoleModule)],
   providers: [
-    {
+    { 
       provide: PERMISSION_REPOSITORY,
       useClass: PrismaPermissionRepository,
     },

@@ -7,6 +7,7 @@ import { HTTPMethod } from '@prisma/client';
 import { PERMISSION_CACHE_SERVICE } from 'src/auth/auth.constants';
 import type { IPermissionCacheService } from 'src/auth/domain/interfaces/permission-cache.service.interface';
 import { IS_SKIP_PERMISSION_KEY } from '../decorators/skip-permission.decorator';
+import { isRabbitContext } from '@golevelup/nestjs-rabbitmq';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -17,6 +18,9 @@ export class PermissionGuard implements CanActivate {
   ) {}
   async canActivate(context: ExecutionContext) {
     if (this.isPublic(context) || this.isSkipPermission(context)) {
+      return true;
+    }
+    if (isRabbitContext(context)) {
       return true;
     }
     const request = context.switchToHttp().getRequest();

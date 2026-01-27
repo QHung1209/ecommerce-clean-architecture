@@ -32,6 +32,7 @@ import { ForgorPasswordUseCase } from './application/use-cases/forgot-password.u
 import { VerifyResetPasswordOtpUseCase } from './application/use-cases/verify-reset-password-otp.use-case';
 import { ResetPasswordTokenCacheService } from './infrastructure/cache/reset-passowrd-token-cache.service';
 import { ResetPasswordUseCase } from './application/use-cases/reset-pasword.use-case';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Global()
 @Module({

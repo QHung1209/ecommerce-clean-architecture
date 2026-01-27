@@ -4,7 +4,7 @@ import { DeleteDeviceUseCase } from './application/use-cases/delete-device.use-c
 import { DeleteAllDeviceUseCase } from './application/use-cases/delete-all-device.use-case';
 import { ListDevicesUseCase } from './application/use-cases/list-devices.use-case';
 import { DEVICE_REPOSITORY } from './device.constants';
-import { PrismaDeviceRepository } from './infrastructure/repositories/prisma/prisma-device.repository';
+import { PrismaDeviceRepository } from './infrastructure/prisma/repositories/prisma-device.repository';
 import { LogoutAllUseCase } from './application/use-cases/logout-all.use-case';
 import { LogoutDeviceUseCase } from './application/use-cases/logout-device.use-case';
 import { DeviceController } from './presentation/controllers/device.controller';

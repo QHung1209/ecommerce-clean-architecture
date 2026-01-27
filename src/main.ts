@@ -5,27 +5,9 @@ import { TransformInterceptor } from './shared/infrastructure/interceptors/trans
 import { LoggingInterceptor } from './shared/infrastructure/interceptors/logging.interceptor';
 import { RedisIoAdapter } from './shared/infrastructure/cache/redis/redis-io.adapter';
 import { RedisService } from './shared/infrastructure/cache/redis/redis.service';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  // Setup RabbitMQ microservices
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.RMQ,
-    options: {
-      urls: [
-        process.env.RABBITMQ_URL || 'amqp://admin:admin123@localhost:5672',
-      ],
-      queue: 'events_queue',
-      queueOptions: {
-        durable: true,
-      },
-      noAck: false,
-    },
-  });
-
-  await app.startAllMicroservices();
 
   const redisService = app.get(RedisService);
   const redisIoAdapter = new RedisIoAdapter(app, redisService);

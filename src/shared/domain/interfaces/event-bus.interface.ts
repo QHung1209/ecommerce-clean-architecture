@@ -1,3 +1,3 @@
 export interface EventBus {
-  publish<T>(pattern: string, event: T): void;
+  publish(exchange: string, routingKey: string, msg: any): Promise<void>;
 }

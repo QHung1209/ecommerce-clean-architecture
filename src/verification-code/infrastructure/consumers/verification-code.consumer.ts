@@ -1,30 +1,37 @@
 import { MailerService } from '@nestjs-modules/mailer';
-import { Controller } from '@nestjs/common';
-import { EventPattern, Payload, Ctx, RmqContext } from '@nestjs/microservices';
-import { VERIFICATION_CODE_CREATED } from 'src/shared/shared.constants';
-import { VerificationCodeCreatedEvent } from '../../domain/events/verification-code-created.event';
+import { Injectable } from '@nestjs/common';
+import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
+import {
+  OTP_CREATED,
+  OTP_EXCHANGE,
+  OTP_QUEUE,
+} from 'src/shared/shared.constants';
 
-@Controller()
+@Injectable()
 export class VerificationCodeConsumer {
   constructor(private readonly mailerService: MailerService) {}
 
-  @EventPattern(VERIFICATION_CODE_CREATED)
-  async handleVerificationCodeCreated(
-    @Payload() data: VerificationCodeCreatedEvent,
-    @Ctx() context: RmqContext,
-  ) {
-    const channel = context.getChannelRef();
-    const originalMsg = context.getMessage();
-
+  @RabbitSubscribe({
+    exchange: OTP_EXCHANGE,
+    queue: OTP_QUEUE,
+    routingKey: OTP_CREATED,
+    allowNonJsonMessages: true,
+    errorHandler: (channel, msg, error) => {
+      console.error('Consumer error:', error);
+      if (msg) {
+        channel.nack(msg, false, false);
+      }
+    },
+  })
+  async handleVerificationCodeCreated(msg: any): Promise<void> {
     try {
       await this.mailerService.sendMail({
-        to: data.email,
+        to: msg.email,
         subject: 'Verification Code',
-        text: `Your verification code is: ${data.code}`,
+        text: `Your verification code is: ${msg.code}`,
       });
-      channel.ack(originalMsg);
     } catch (error) {
-      channel.nack(originalMsg);
+      console.error('Failed to send email:', error);
     }
   }
 }

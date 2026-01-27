@@ -19,6 +19,7 @@ import type {
 } from 'src/auth/domain/interfaces/auth-jwt.service.interface';
 import type { IUserCacheService } from 'src/auth/domain/interfaces/user-cache.service.interface';
 import type { ITokenCacheService } from 'src/auth/domain/interfaces/token-cache.service.interface';
+import { isRabbitContext } from '@golevelup/nestjs-rabbitmq';
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   constructor(
@@ -39,6 +40,11 @@ export class JwtAuthGuard implements CanActivate {
     if (isPublic) {
       return true;
     }
+
+    if (isRabbitContext(context)) {
+      return true;
+    }
+
     const request = context.switchToHttp().getRequest();
 
     const token = this.extractBearerToken(request);

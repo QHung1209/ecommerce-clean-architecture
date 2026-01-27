@@ -1,10 +1,10 @@
 import { Global, Module } from '@nestjs/common';
-import { RabbitMQModule } from './infrastructure/message-brokers/rabbitmq/rabbitmq.module';
+import { RabbitMQEventModule } from './infrastructure/message-brokers/rabbitmq/rabbitmq.event.module';
 import { EmailModule } from './infrastructure/mailer/email.module';
 
 @Global()
 @Module({
-  imports: [RabbitMQModule, EmailModule],
-  exports: [RabbitMQModule, EmailModule],
+  imports: [RabbitMQEventModule, EmailModule],
+  exports: [RabbitMQEventModule, EmailModule],
 })
 export class SharedModule {}

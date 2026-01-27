@@ -10,7 +10,8 @@ import type { EventBus } from 'src/shared/domain/interfaces/event-bus.interface'
 
 import {
   EVENT_BUS,
-  VERIFICATION_CODE_CREATED,
+  OTP_CREATED,
+  OTP_EXCHANGE,
 } from 'src/shared/shared.constants';
 
 @Injectable()
@@ -24,7 +25,7 @@ export class GenerateOtpUseCase {
 
   async execute(emailStr: string, type: VerificationCodeType): Promise<string> {
     const email = Email.create(emailStr);
-    const code = this.generateRandomCode(6);
+    const code = VerificationCode.generateRandomCode(6);
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
 
     const verificationCode = VerificationCode.create({
@@ -35,22 +36,12 @@ export class GenerateOtpUseCase {
     });
 
     await this.verificationCodeRepository.save(verificationCode);
-    this.eventBus.publish(VERIFICATION_CODE_CREATED, {
+    await this.eventBus.publish(OTP_EXCHANGE, OTP_CREATED, {
       email: emailStr,
       code,
       type,
     });
 
     return code;
-  }
-
-  private generateRandomCode(length: number): string {
-    let result = '';
-    const characters = '0123456789';
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
   }
 }

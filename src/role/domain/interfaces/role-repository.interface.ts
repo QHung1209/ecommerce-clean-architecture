@@ -1,4 +1,3 @@
-import { ISharedQuery } from 'src/shared/domain/interfaces/query.interface';
 import { Role } from '../entities/role.entity';
 import { HTTPMethod } from '@prisma/client';
 import { IBaseRepository } from 'src/shared/domain/interfaces/base-repository.interface';
