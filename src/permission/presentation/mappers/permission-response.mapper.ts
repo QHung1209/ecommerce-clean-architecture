@@ -18,7 +18,7 @@ export class PermissionResponseMapper {
 
   static toPaginatedResponse(result: PaginatedResult<Permission>) {
     return {
-      permissions: this.toResponseList(result.data),
+      data: this.toResponseList(result.data),
       total: result.total,
       totalPages: result.totalPages,
       currentPage: result.currentPage,

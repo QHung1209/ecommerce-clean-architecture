@@ -13,6 +13,7 @@ import { VerificationCodeModule } from './verification-code/verification-code.mo
 import { SharedModule } from './shared/shared.module';
 import { LanguageModule } from './language/language.module';
 import { CategoryModule } from './category/category.module';
+import { BrandModule } from './brand/brand.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { CategoryModule } from './category/category.module';
     SharedModule,
     LanguageModule,
     CategoryModule,
+    BrandModule,
   ],
   controllers: [AppController],
   providers: [AppService],

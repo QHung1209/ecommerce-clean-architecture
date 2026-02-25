@@ -1,4 +1,5 @@
 import { Device } from 'src/device/domain/entities/device.entity';
+import { PaginatedResult } from 'src/shared/presentation/mappers/pagination.interface';
 
 type PaginatedDeviceResult = {
   devices: Device[];
@@ -21,12 +22,14 @@ export class DeviceResponseMapper {
     return devices.map((device) => this.toResponse(device));
   }
 
-  static toPaginatedResponse(result: PaginatedDeviceResult) {
+  static toPaginatedResponse(result: PaginatedResult<Device>) {
     return {
-      devices: this.toResponseList(result.devices),
-      total: result.total,
-      totalPages: result.totalPage,
-      currentPage: result.page,
+      data: this.toResponseList(result.data),
+      meta: {
+        total: result.total,
+        totalPages: result.totalPages,
+        currentPage: result.currentPage,
+      },
     };
   }
 }

@@ -14,10 +14,10 @@ export class ListDevicesUseCase {
     const devices = await this.deviceRepository.findAllByUserId(query, userId);
     const total = await this.deviceRepository.countByUserId(userId);
     return {
-      devices,
+      data: devices,
       total,
-      totalPage: Math.ceil(total / query.limit),
-      page: query.page,
+      totalPages: Math.ceil(total / query.limit),
+      currentPage: query.page,
     };
   }
 }

@@ -18,7 +18,7 @@ export class ListLanguagesUseCase {
     const languages = await this.languageRepository.findAll(query);
     const total = await this.languageRepository.count();
     return {
-      languages,
+      data: languages,
       total,
       totalPages: Math.ceil(total / query.limit),
       currentPage: +query.page,

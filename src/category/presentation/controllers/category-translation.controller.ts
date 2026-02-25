@@ -19,6 +19,7 @@ import { GetCategoryTranslationUseCase } from 'src/category/application/use-case
 import { SharedQueryDto } from 'src/shared/presentation/dto/shared.dto';
 import { CreateCategoryTranslationDto } from '../dto/create-category-translation.dto';
 import { UpdateCategoryTranslationDto } from '../dto/update-category-translation.dto';
+import { ListCategoryTranslationDto } from '../dto/list-category-translation.dto';
 
 @Controller('category-translations')
 export class CategoryTranslationController {
@@ -32,12 +33,11 @@ export class CategoryTranslationController {
 
   @Get()
   async listCategoryTranslations(
-    @Query('parentCategoryId') parentCategoryId: number,
-    @Query() query: SharedQueryDto,
+    @Query() query: ListCategoryTranslationDto,
   ) {
     const categoryTranslations =
       await this.listCategoryTranslationsUseCase.execute(
-        parentCategoryId,
+        query.categoryId,
         query,
       );
     return CategoryTranslationResponseMapper.toPaginatedResponse(

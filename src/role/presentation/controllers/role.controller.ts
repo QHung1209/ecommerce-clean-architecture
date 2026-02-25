@@ -20,6 +20,7 @@ import { DeleteRoleUseCase } from 'src/role/application/use-cases/delete-role.us
 import { ListRolesUseCase } from 'src/role/application/use-cases/list-roles.use-case';
 import { GetRoleUseCase } from 'src/role/application/use-cases/get-role.use-case';
 import { SharedQueryDto } from 'src/shared/presentation/dto/shared.dto';
+import { PaginatedResult } from 'src/shared/presentation/mappers/pagination.interface';
 
 @Controller('roles')
 export class RoleController {
@@ -32,9 +33,9 @@ export class RoleController {
   ) {}
 
   @Get()
-  async findAll(@Query() queryDto: SharedQueryDto): Promise<RoleResponseDto[]> {
+  async findAll(@Query() queryDto: SharedQueryDto) {
     const roles = await this.listRolesUseCase.execute(queryDto);
-    return roles.map((role) => RoleResponseMapper.toResponse(role));
+    return RoleResponseMapper.toPaginatedResponse(roles);
   }
 
   @Get(':id')

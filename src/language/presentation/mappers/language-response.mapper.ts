@@ -1,4 +1,5 @@
 import { Language } from 'src/language/domain/entities/language.entity';
+import { PaginatedResult } from 'src/shared/presentation/mappers/pagination.interface';
 
 type PaginatedLanguageResult = {
   languages: Language[];
@@ -20,9 +21,9 @@ export class LanguageResponseMapper {
     return languages.map((language) => this.toResponse(language));
   }
 
-  static toPaginatedResponse(result: PaginatedLanguageResult) {
+  static toPaginatedResponse(result: PaginatedResult<Language>) {
     return {
-      languages: this.toResponseList(result.languages),
+      data: this.toResponseList(result.data),
       total: result.total,
       totalPages: result.totalPages,
       currentPage: result.currentPage,
