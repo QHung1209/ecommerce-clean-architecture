@@ -7,7 +7,7 @@ export enum UserStatus {
   ACTIVE = 'ACTIVE',
 }
 
-export interface UserProps {
+export type UserProps = {
   email: Email;
   name: string;
   password: string;
@@ -16,7 +16,7 @@ export interface UserProps {
   status: UserStatus;
   roleId: number | null;
   tokenVersion: number;
-}
+};
 
 export class User extends BaseEntity<UserProps> {
   constructor(props: UserProps, id?: number) {
@@ -121,14 +121,8 @@ export class User extends BaseEntity<UserProps> {
     this.props.roleId = data.roleId;
   }
 
-  static create(
-    props: Omit<UserProps, 'tokenVersion' | 'status'>,
-    id?: number,
-  ): User {
-    return new User(
-      { ...props, tokenVersion: 0, status: UserStatus.ACTIVE },
-      id,
-    );
+  static create(props: Omit<UserProps, 'status'>, id?: number): User {
+    return new User({ ...props, status: UserStatus.ACTIVE }, id);
   }
 
   static register(props: {

@@ -12,7 +12,7 @@ import type { IPermissionCacheService } from 'src/auth/domain/interfaces/permiss
 import type { IAuthJwtService } from 'src/auth/domain/interfaces/auth-jwt.service.interface';
 import { v4 as uuidv4 } from 'uuid';
 
-export interface LoginResult {
+type LoginResult = {
   accessToken: string;
   refreshToken: string;
   user: {
@@ -21,7 +21,7 @@ export interface LoginResult {
     name: string;
     roleId: number | null;
   };
-}
+};
 
 @Injectable()
 export class LoginUseCase {
@@ -65,6 +65,7 @@ export class LoginUseCase {
     if (userId === undefined) {
       throw new Error('User ID is undefined');
     }
+    user;
     const jti = uuidv4();
     const accessToken = this.jwtService.generateAccessToken(
       userId,

@@ -4,13 +4,13 @@ import { User, UserProps } from 'src/user/domain/entities/user.entity';
 import type { IUserRepository } from 'src/user/domain/interfaces/user-repository.interface';
 import { USER_REPOSITORY } from 'src/user/user.constants';
 
-export interface UpdateUserCommand {
+type UpdateUserCommand = {
   name: string;
   email: string;
   phoneNumber: string;
   avatar: string;
   roleId: number;
-}
+};
 
 @Injectable()
 export class UpdateUserUseCase {

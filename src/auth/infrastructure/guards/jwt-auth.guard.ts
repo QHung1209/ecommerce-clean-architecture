@@ -41,9 +41,9 @@ export class JwtAuthGuard implements CanActivate {
       return true;
     }
 
-    if (isRabbitContext(context)) {
-      return true;
-    }
+    // if (isRabbitContext(context)) {
+    //   return true;
+    // }
 
     const request = context.switchToHttp().getRequest();
 
@@ -60,12 +60,12 @@ export class JwtAuthGuard implements CanActivate {
       payload.jti,
     );
     if (isBlocked) {
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException('Token is blocked');
     }
     const currentTokenVersion =
       await this.userCacheService.getTokenVersionByUserId(payload.id);
     if (currentTokenVersion !== payload.tokenVersion) {
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException('Token is expired');
     }
     return true;
   }

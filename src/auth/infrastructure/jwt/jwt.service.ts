@@ -21,9 +21,7 @@ export class AuthJwtService implements IAuthJwtService {
     tokenVersion: number,
   ): string {
     const payload = { id: userId, email, roleId, jti, tokenVersion };
-    return this.jwtService.sign(payload, {
-      secret: this.configService.get('JWT_SECRET'),
-    });
+    return this.jwtService.sign(payload);
   }
 
   generateRefreshToken(
@@ -44,23 +42,14 @@ export class AuthJwtService implements IAuthJwtService {
   }
 
   verifyAccessToken(token: string) {
-    const accessToken = this.extractToken(token);
-    return this.jwtService.verify<JwtPayload>(accessToken, {
-      secret: this.configService.get('JWT_SECRET'),
-    });
+    return this.jwtService.verify<JwtPayload>(token);
   }
 
   verifyRefreshToken(token: string) {
-    const refreshToken = this.extractToken(token);
-    return this.jwtService.verify<JwtPayload>(refreshToken, {
+    return this.jwtService.verify<JwtPayload>(token, {
       secret: this.configService.get('JWT_REFRESH_SECRET'),
     });
   }
 
-  private extractToken(token: string) {
-    if (token.startsWith('Bearer ')) {
-      return token.split('Bearer ')[1];
-    }
-    return token;
-  }
+
 }

@@ -2,12 +2,12 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DEVICE_REPOSITORY } from 'src/device/device.constants';
 import { Device, DeviceProps } from 'src/device/domain/entities/device.entity';
 import type { IDeviceRepository } from 'src/device/domain/interfaces/device-repository.interface';
-export interface CreateDeviceCommand {
+type CreateDeviceCommand = {
   userAgent: string;
   ip: string;
   userId: number;
   jti: string;
-}
+};
 @Injectable()
 export class CreateDeviceUseCase {
   constructor(

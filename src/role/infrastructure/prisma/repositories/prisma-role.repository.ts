@@ -13,7 +13,7 @@ export class PrismaRoleRepository implements IRoleRepository {
   async save(role: Role, createdById: number): Promise<Role> {
     const savedRole = role.hasId()
       ? await this.prisma.role.update({
-          where: { id: role.getId() },
+          where: { deletedAt: null, id: role.getId() },
           data: {
             ...PrismaRoleMapper.toUpdatePersistence(
               role.getProps(),
@@ -36,13 +36,13 @@ export class PrismaRoleRepository implements IRoleRepository {
 
   async delete(id: number): Promise<void> {
     await this.prisma.role.delete({
-      where: { id },
+      where: { deletedAt: null, id },
     });
   }
 
   async findById(id: number): Promise<Role | null> {
     const role = await this.prisma.role.findUnique({
-      where: { id },
+      where: { deletedAt: null, id },
       include: {
         permissions: true,
       },
@@ -54,6 +54,7 @@ export class PrismaRoleRepository implements IRoleRepository {
     const { limit, page, search } = queryDto;
     const roles = await this.prisma.role.findMany({
       where: {
+        deletedAt: null,
         name: {
           contains: search,
         },
@@ -75,7 +76,7 @@ export class PrismaRoleRepository implements IRoleRepository {
     roleId: number,
   ): Promise<{ path: string; method: HTTPMethod }[] | null> {
     const role = await this.prisma.role.findUnique({
-      where: { id: roleId },
+      where: { deletedAt: null,  id: roleId },
       select: {
         permissions: {
           select: {
@@ -91,6 +92,7 @@ export class PrismaRoleRepository implements IRoleRepository {
   async getRolesByPermissionId(permissionId: number): Promise<Role[] | []> {
     const roles = await this.prisma.role.findMany({
       where: {
+        deletedAt: null,
         permissions: {
           some: {
             id: permissionId,

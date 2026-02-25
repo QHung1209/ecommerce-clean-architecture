@@ -1,11 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { IPermissionRepository } from 'src/permission/domain/interfaces/permission-repository.interface';
 import { PERMISSION_REPOSITORY } from 'src/permission/permission.constants';
-export interface QueryCommand {
+
+type QueryCommand = {
   limit: number;
   page: number;
   search?: string;
-}
+};
 @Injectable()
 export class ListPermissionsUseCase {
   constructor(
@@ -17,10 +18,10 @@ export class ListPermissionsUseCase {
     const permissions = await this.permissionRepository.findAll(query);
     const total = await this.permissionRepository.count();
     return {
-      permissions,
+     data: permissions,
       total,
-      totalPage: Math.ceil(total / query.limit),
-      page: query.page,
+      totalPages: Math.ceil(total / query.limit),
+      currentPage: query.page,
     };
   }
 }

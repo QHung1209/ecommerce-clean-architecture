@@ -1,11 +1,5 @@
 import { Permission } from 'src/permission/domain/entities/permission.entity';
-
-export interface PaginatedPermissionResult {
-  permissions: Permission[];
-  total: number;
-  totalPage: number;
-  page: number;
-}
+import { PaginatedResult } from 'src/shared/presentation/mappers/pagination.interface';
 
 export class PermissionResponseMapper {
   static toResponse(permission: Permission) {
@@ -22,12 +16,12 @@ export class PermissionResponseMapper {
     return permissions.map((permission) => this.toResponse(permission));
   }
 
-  static toPaginatedResponse(result: PaginatedPermissionResult) {
+  static toPaginatedResponse(result: PaginatedResult<Permission>) {
     return {
-      permissions: this.toResponseList(result.permissions),
+      permissions: this.toResponseList(result.data),
       total: result.total,
-      totalPage: result.totalPage,
-      page: result.page,
+      totalPages: result.totalPages,
+      currentPage: result.currentPage,
     };
   }
 }

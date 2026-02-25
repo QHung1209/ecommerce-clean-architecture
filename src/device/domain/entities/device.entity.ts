@@ -1,13 +1,13 @@
 import { BaseEntity } from 'src/shared/domain/entities/entity';
 
-export interface DeviceProps {
+export type DeviceProps = {
   userId: number;
   userAgent: string;
   ip: string;
   jti: string;
   lastActive: Date;
   isActive: boolean;
-}
+};
 
 export class Device extends BaseEntity<DeviceProps> {
   constructor(props: DeviceProps, id?: number) {

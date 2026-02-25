@@ -23,7 +23,7 @@ export class PrismaUserRepository implements IUserRepository {
     );
     const savedUser = user.hasId()
       ? await this.prisma.user.update({
-          where: { id: user.getId() },
+          where: { deletedAt: null, id: user.getId() },
           data: persistenceData,
         })
       : await this.prisma.user.create({ data: persistenceData });
@@ -31,40 +31,40 @@ export class PrismaUserRepository implements IUserRepository {
   }
 
   async findById(id: number): Promise<User | null> {
-    const user = await this.prisma.user.findUnique({ where: { id } });
+    const user = await this.prisma.user.findUnique({ where: { deletedAt: null, id } });
     if (!user) return null;
 
     return PrismaUserMapper.toDomain(user);
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const user = await this.prisma.user.findUnique({ where: { email } });
+    const user = await this.prisma.user.findUnique({ where: { deletedAt: null, email } });
     if (!user) return null;
 
     return PrismaUserMapper.toDomain(user);
   }
 
   async findAll(): Promise<User[]> {
-    const users = await this.prisma.user.findMany();
+    const users = await this.prisma.user.findMany({ where: { deletedAt: null } });
     return users.map((user) => PrismaUserMapper.toDomain(user));
   }
 
   async findByRoleId(roleId: number): Promise<User[]> {
-    const users = await this.prisma.user.findMany({ where: { roleId } });
+    const users = await this.prisma.user.findMany({ where: { deletedAt: null, roleId } });
     return users.map((user) => PrismaUserMapper.toDomain(user));
   }
 
   async delete(id: number): Promise<void> {
-    await this.prisma.user.delete({ where: { id } });
+    await this.prisma.user.delete({ where: { deletedAt: null, id } });
   }
 
   async getTokenVersionByUserId(id: number): Promise<number | null> {
-    const user = await this.prisma.user.findUnique({ where: { id } });
+    const user = await this.prisma.user.findUnique({ where: { deletedAt: null, id } });
     if (!user) return null;
     return user.tokenVersion;
   }
 
   async count(): Promise<number> {
-    return await this.prisma.user.count();
+    return await this.prisma.user.count({ where: { deletedAt: null } }  );
   }
 }

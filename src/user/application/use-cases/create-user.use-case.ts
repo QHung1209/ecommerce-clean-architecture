@@ -6,14 +6,14 @@ import { User } from 'src/user/domain/entities/user.entity';
 import { Password } from 'src/shared/domain/value-objects/password.vo';
 import { Email } from 'src/shared/domain/value-objects/email.vo';
 
-export interface CreateUserCommand {
+type CreateUserCommand = {
   name: string;
   email: string;
   password: string;
   phoneNumber: string;
   avatar?: string;
   roleId: number;
-}
+};
 @Injectable()
 export class CreateUserUseCase {
   constructor(
@@ -29,6 +29,7 @@ export class CreateUserUseCase {
       phoneNumber: data.phoneNumber,
       avatar: data.avatar,
       roleId: data.roleId,
+      tokenVersion: 0,
     });
 
     return this.userRepository.save(user);

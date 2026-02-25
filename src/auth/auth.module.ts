@@ -31,8 +31,7 @@ import { VerificationCodeModule } from 'src/verification-code/verification-code.
 import { ForgorPasswordUseCase } from './application/use-cases/forgot-password.use-case';
 import { VerifyResetPasswordOtpUseCase } from './application/use-cases/verify-reset-password-otp.use-case';
 import { ResetPasswordTokenCacheService } from './infrastructure/cache/reset-passowrd-token-cache.service';
-import { ResetPasswordUseCase } from './application/use-cases/reset-pasword.use-case';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ResetPasswordUseCase } from './application/use-cases/reset-password.use-case';
 
 @Global()
 @Module({
@@ -43,7 +42,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
       useFactory: (configService: ConfigService) => ({
         secret: configService.get('JWT_SECRET'),
         signOptions: {
-          expiresIn: configService.get('JWT_EXPIRES_IN', 900),
+          expiresIn: configService.get('JWT_EXPIRES_IN', 900000000000000),
         },
       }),
     }),
@@ -78,7 +77,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     },
     {
       provide: RESET_PASSWORD_TOKEN_CACHE_SERVICE,
-      useClass: ResetPasswordTokenCacheService
+      useClass: ResetPasswordTokenCacheService,
     },
     LoginUseCase,
     LogoutUseCase,

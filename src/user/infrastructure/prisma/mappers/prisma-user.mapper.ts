@@ -6,7 +6,6 @@ import { Password } from 'src/shared/domain/value-objects/password.vo';
 export class PrismaUserMapper {
   static toDomain(user: PrismaUser): User {
     const { id, email, avatar, password, ...rest } = user;
-
     const userEntity = User.create(
       {
         ...rest,

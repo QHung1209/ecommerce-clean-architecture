@@ -1,12 +1,12 @@
 import { Permission } from 'src/permission/domain/entities/permission.entity';
 import { BaseEntity } from 'src/shared/domain/entities/entity';
 
-export interface RoleProps {
+export type RoleProps = {
   name: string;
   description: string;
   isActive: boolean;
   permissions?: Permission[];
-}
+};
 
 export class Role extends BaseEntity<RoleProps> {
   constructor(props: RoleProps, id?: number) {

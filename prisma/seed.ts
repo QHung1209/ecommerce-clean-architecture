@@ -254,10 +254,34 @@ async function main() {
   console.log('✅ Permissions assigned to roles');
 
   // ===========================
+  // LANGUAGES
+  // ===========================
+  console.log('🌍 Creating languages...');
+
+  const languages = [
+    { code: 'vi', name: 'Vietnamese' },
+    { code: 'en', name: 'English' },
+  ];
+
+  for (const lang of languages) {
+    await prisma.language.upsert({
+      where: { code: lang.code },
+      update: {},
+      create: {
+        code: lang.code,
+        name: lang.name,
+      },
+    });
+  }
+
+  console.log(`✅ Created/Updated ${languages.length} languages`);
+
+  // ===========================
   // SUMMARY
   // ===========================
   console.log('\n🎉 Seeding completed successfully!');
   console.log(`\n📊 Summary:`);
+  console.log(`   - Languages: ${languages.length}`);
   console.log(`   - Roles: ${3}`);
   console.log(`   - Permissions: ${createdPermissions.length}`);
   console.log(`   - Admin permissions: ${createdPermissions.length}`);

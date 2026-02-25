@@ -10,10 +10,10 @@ import { Email } from 'src/shared/domain/value-objects/email.vo';
 import { Password } from 'src/shared/domain/value-objects/password.vo';
 import { v4 as uuidv4 } from 'uuid';
 
-export interface RegisterCommand {
+type RegisterCommand = {
   email: string;
   password: string;
-}
+};
 
 @Injectable()
 export class RegisterUseCase {

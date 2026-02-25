@@ -21,7 +21,7 @@ import { ForgotPasswordDto } from '../dto/forgot-password.dto';
 import { ForgorPasswordUseCase } from 'src/auth/application/use-cases/forgot-password.use-case';
 import { VerifyOtpDto } from '../dto/verify-otp.dto';
 import { VerifyResetPasswordOtpUseCase } from 'src/auth/application/use-cases/verify-reset-password-otp.use-case';
-import { ResetPasswordUseCase } from 'src/auth/application/use-cases/reset-pasword.use-case';
+import { ResetPasswordUseCase } from 'src/auth/application/use-cases/reset-password.use-case';
 import { ResetPasswordDto } from '../dto/reset-password.dto';
 @Controller('auth')
 export class AuthController {

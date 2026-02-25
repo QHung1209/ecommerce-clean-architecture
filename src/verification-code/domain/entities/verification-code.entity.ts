@@ -5,12 +5,12 @@ export enum VerificationCodeType {
   FORGOT_PASSWORD = 'FORGOT_PASSWORD',
 }
 
-export interface VerificationCodeProps {
+export type VerificationCodeProps = {
   email: Email;
   code: string;
   type: VerificationCodeType;
   expiresAt: Date;
-}
+};
 
 export class VerificationCode extends BaseEntity<VerificationCodeProps> {
   constructor(props: VerificationCodeProps, id?: number) {

@@ -13,7 +13,7 @@ import { forwardRef } from '@nestjs/common';
 @Module({
   imports: [forwardRef(() => RoleModule)],
   providers: [
-    { 
+    {
       provide: PERMISSION_REPOSITORY,
       useClass: PrismaPermissionRepository,
     },

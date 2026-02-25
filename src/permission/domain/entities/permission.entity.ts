@@ -1,12 +1,12 @@
 import { HTTPMethod } from '@prisma/client';
 import { BaseEntity } from 'src/shared/domain/entities/entity';
 
-export interface PermissionProps {
+export type PermissionProps = {
   name: string;
   description: string;
   path: string;
   method: HTTPMethod;
-}
+};
 
 export class Permission extends BaseEntity<PermissionProps> {
   constructor(props: PermissionProps, id?: number) {

@@ -9,11 +9,11 @@ export class DeleteDeviceUseCase {
     private readonly deviceRepository: IDeviceRepository,
   ) {}
 
-  async execute(id: number) {
+  async execute(id: number, updatedById: number) {
     const device = await this.deviceRepository.findById(id);
     if (!device) {
       throw new NotFoundException('Device not found');
     }
-    await this.deviceRepository.delete(id);
+    await this.deviceRepository.delete(id, updatedById);
   }
 }

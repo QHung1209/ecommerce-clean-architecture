@@ -1,11 +1,11 @@
 import { User } from 'src/user/domain/entities/user.entity';
 import { AuthResponseDto } from '../dto/auth-response.dto';
 
-export interface AuthResponse {
+type AuthResponse = {
   accessToken: string;
   refreshToken: string;
   user: User;
-}
+};
 
 export class AuthResponseMapper {
   static toResponse(authData: AuthResponse): AuthResponseDto {

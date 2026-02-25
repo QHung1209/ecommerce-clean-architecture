@@ -3,11 +3,11 @@ import type { IRoleRepository } from 'src/role/domain/interfaces/role-repository
 import { Role } from 'src/role/domain/entities/role.entity';
 import { ROLE_REPOSITORY } from 'src/role/role.constants';
 
-export interface QueryCommand {
+type QueryCommand = {
   limit: number;
   page: number;
   search?: string;
-}
+};
 @Injectable()
 export class ListRolesUseCase {
   constructor(

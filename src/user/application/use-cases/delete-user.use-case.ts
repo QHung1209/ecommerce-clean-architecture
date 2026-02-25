@@ -9,7 +9,7 @@ export class DeleteUserUseCase {
     private readonly userRepository: IUserRepository,
   ) {}
 
-  async execute(id: number): Promise<void> {
+  async execute(id: number, updatedById: number): Promise<void> {
     const userExisted = await this.userRepository.findById(id);
     if (!userExisted) {
       throw new NotFoundException({
@@ -17,6 +17,6 @@ export class DeleteUserUseCase {
         key: 'USER_NOT_FOUND',
       });
     }
-    await this.userRepository.delete(id);
+    await this.userRepository.delete(id, updatedById);
   }
 }

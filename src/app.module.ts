@@ -11,6 +11,8 @@ import { RoleModule } from './role/role.module';
 import { DeviceModule } from './device/device.module';
 import { VerificationCodeModule } from './verification-code/verification-code.module';
 import { SharedModule } from './shared/shared.module';
+import { LanguageModule } from './language/language.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { SharedModule } from './shared/shared.module';
     DeviceModule,
     VerificationCodeModule,
     SharedModule,
+    LanguageModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

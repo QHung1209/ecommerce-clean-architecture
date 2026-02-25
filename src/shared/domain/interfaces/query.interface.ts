@@ -1,5 +1,6 @@
-export interface ISharedQuery {
+export type ISharedQuery = {
   limit: number;
   page: number;
   search?: string;
-}
+  languageId?: number;
+};

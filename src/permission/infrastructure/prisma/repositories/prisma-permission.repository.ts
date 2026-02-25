@@ -19,7 +19,7 @@ export class PrismaPermissionRepository implements IPermissionRepository {
     );
     const savedPermission = permission.hasId()
       ? await this.prisma.permission.update({
-          where: { id: permission.getId() },
+          where: { deletedAt: null, id: permission.getId() },
           data: { ...persistenceData, updatedById: changeById },
         })
       : await this.prisma.permission.create({
@@ -33,7 +33,7 @@ export class PrismaPermissionRepository implements IPermissionRepository {
 
   async findById(id: number): Promise<Permission | null> {
     const permission = await this.prisma.permission.findUnique({
-      where: { id },
+      where: { deletedAt: null, id },
     });
     return permission ? PrismaPermissionMapper.toDomain(permission) : null;
   }
@@ -42,6 +42,7 @@ export class PrismaPermissionRepository implements IPermissionRepository {
     const { limit, page, search } = query;
     const permissions = await this.prisma.permission.findMany({
       where: {
+        deletedAt: null,
         name: {
           contains: search,
         },
@@ -58,6 +59,7 @@ export class PrismaPermissionRepository implements IPermissionRepository {
   async findAllByIds(ids: number[]): Promise<Permission[]> {
     const permissions = await this.prisma.permission.findMany({
       where: {
+        deletedAt: null,
         id: {
           in: ids,
         },
@@ -71,6 +73,6 @@ export class PrismaPermissionRepository implements IPermissionRepository {
   }
 
   async delete(id: number): Promise<void> {
-    await this.prisma.permission.delete({ where: { id } });
+    await this.prisma.permission.delete({ where: { deletedAt: null, id } });
   }
 }

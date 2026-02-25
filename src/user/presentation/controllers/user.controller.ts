@@ -8,6 +8,7 @@ import {
   Body,
   UseGuards,
   Query,
+  Req,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/infrastructure/guards/jwt-auth.guard';
 import { UserStatus } from 'src/user/domain/entities/user.entity';
@@ -59,7 +60,7 @@ export class UserController {
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: number): Promise<void> {
-    await this.deleteUserUseCase.execute(id);
+  async delete(@Param('id') id: number, @Req() req: any): Promise<void> {
+    await this.deleteUserUseCase.execute(id, req.user.id);
   }
 }

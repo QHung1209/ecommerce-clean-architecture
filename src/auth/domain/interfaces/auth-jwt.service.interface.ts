@@ -1,4 +1,4 @@
-export interface JwtPayload {
+export type JwtPayload = {
   id: number;
   email: string;
   roleId: number | null;
