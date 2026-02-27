@@ -14,6 +14,7 @@ import { SharedModule } from './shared/shared.module';
 import { LanguageModule } from './language/language.module';
 import { CategoryModule } from './category/category.module';
 import { BrandModule } from './brand/brand.module';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { BrandModule } from './brand/brand.module';
     LanguageModule,
     CategoryModule,
     BrandModule,
+    StorageModule,
   ],
   controllers: [AppController],
   providers: [AppService],
