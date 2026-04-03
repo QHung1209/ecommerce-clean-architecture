@@ -23,10 +23,14 @@ describe('GenerateOtpUseCase', () => {
 
     expect(code).toHaveLength(6);
     expect(repo.save).toHaveBeenCalled();
-    expect(eventBus.publish).toHaveBeenCalledWith(OTP_EXCHANGE, OTP_CREATED, expect.objectContaining({
-      email: emailStr,
-      code,
-      type
-    }));
+    expect(eventBus.publish).toHaveBeenCalledWith(
+      OTP_EXCHANGE,
+      OTP_CREATED,
+      expect.objectContaining({
+        email: emailStr,
+        code,
+        type,
+      }),
+    );
   });
 });

@@ -46,6 +46,4 @@ describe('CreateUserUseCase', () => {
 
     await expect(useCase.execute(command)).rejects.toThrow();
   });
-
-
 });

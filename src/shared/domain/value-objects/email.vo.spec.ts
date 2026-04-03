@@ -4,7 +4,7 @@ describe('Email Value Object', () => {
   it('should create an email object if email is valid', () => {
     const validEmailStr = 'test@example.com';
     const email = Email.create(validEmailStr);
-    
+
     expect(email.getValue()).toBe(validEmailStr);
   });
 

@@ -36,7 +36,7 @@ export class DeleteCategoryUseCase {
     }
 
     //Future: Check product
-    
+
     await this.categoryTranslationRepository.deleteByCategoryId(
       id,
       deletedById,

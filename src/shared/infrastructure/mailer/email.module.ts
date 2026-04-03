@@ -21,10 +21,12 @@ import { EMAIL_SERVICE } from 'src/shared/shared.constants';
       }),
     }),
   ],
-  providers: [{
-    useClass: EmailService,
-    provide: EMAIL_SERVICE,
-  }],
+  providers: [
+    {
+      useClass: EmailService,
+      provide: EMAIL_SERVICE,
+    },
+  ],
   exports: [MailerModule, EMAIL_SERVICE],
 })
 export class EmailModule {}

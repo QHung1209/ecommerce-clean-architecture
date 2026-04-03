@@ -32,9 +32,7 @@ export class CategoryTranslationController {
   ) {}
 
   @Get()
-  async listCategoryTranslations(
-    @Query() query: ListCategoryTranslationDto,
-  ) {
+  async listCategoryTranslations(@Query() query: ListCategoryTranslationDto) {
     const categoryTranslations =
       await this.listCategoryTranslationsUseCase.execute(
         query.categoryId,

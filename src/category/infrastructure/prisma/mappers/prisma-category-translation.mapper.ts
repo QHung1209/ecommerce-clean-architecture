@@ -1,7 +1,8 @@
-import { Prisma, CategoryTranslation as PrismaCategoryTranslation } from '@prisma/client';
+import {
+  Prisma,
+  CategoryTranslation as PrismaCategoryTranslation,
+} from '@prisma/client';
 import { CategoryTranslation } from 'src/category/domain/entities/category.translation.entity';
-
-
 
 export class PrismaCategoryTranslationMapper {
   static toDomain(category: PrismaCategoryTranslation): any {

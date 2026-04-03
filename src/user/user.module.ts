@@ -24,7 +24,7 @@ import { USER_REPOSITORY } from './user.constants';
     ListUsersUseCase,
   ],
   exports: [
-    USER_REPOSITORY, 
+    USER_REPOSITORY,
     CreateUserUseCase,
     GetUserUseCase,
     UpdateUserUseCase,

@@ -18,7 +18,7 @@ export class ListPermissionsUseCase {
     const permissions = await this.permissionRepository.findAll(query);
     const total = await this.permissionRepository.count();
     return {
-     data: permissions,
+      data: permissions,
       total,
       totalPages: Math.ceil(total / query.limit),
       currentPage: query.page,

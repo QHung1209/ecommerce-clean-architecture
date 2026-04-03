@@ -9,7 +9,10 @@ export class GetBrandUseCase {
     private readonly brandRepository: IBrandRepository,
   ) {}
   async execute(id: number, languageCode?: string) {
-    const brand = await this.brandRepository.findByCondition({id}, languageCode);
+    const brand = await this.brandRepository.findByCondition(
+      { id },
+      languageCode,
+    );
     if (!brand) {
       throw new NotFoundException('Brand not found');
     }

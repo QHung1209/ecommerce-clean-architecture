@@ -7,7 +7,10 @@ import { PrismaVariantOptionMapper } from '../mappers/prisma-variant-option.mapp
 
 @Injectable()
 export class PrismaVariantOptionRepository implements IVariantOptionRepository {
-  constructor(@Inject(PrismaService) private readonly prisma: PrismaService | Prisma.TransactionClient) {}
+  constructor(
+    @Inject(PrismaService)
+    private readonly prisma: PrismaService | Prisma.TransactionClient,
+  ) {}
   async save(entity: VariantOption, id: number): Promise<VariantOption> {
     const client = this.prisma;
     const savedVariantOption = entity.hasId()

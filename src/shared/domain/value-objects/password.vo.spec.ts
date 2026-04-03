@@ -4,7 +4,7 @@ describe('Password Value Object', () => {
   it('should create a valid password', () => {
     const validPassword = 'StrongPassword123';
     const password = Password.create(validPassword);
-    
+
     expect(password.getValue()).toBe(validPassword);
   });
 
@@ -36,7 +36,7 @@ describe('Password Value Object', () => {
     expect(() => {
       Password.create('short'); // <8 chars, no uppercase, no numbers
     }).toThrow(
-      'Invalid password: Password must be at least 8 characters long, Password must contain at least one uppercase letter, Password must contain at least one digit'
+      'Invalid password: Password must be at least 8 characters long, Password must contain at least one uppercase letter, Password must contain at least one digit',
     );
   });
 });

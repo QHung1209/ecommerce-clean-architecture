@@ -27,7 +27,10 @@ describe('User Entity', () => {
   describe('domain behaviors', () => {
     it('should activate user', () => {
       // instantiate with INACTIVE directly via constructor to avoid create() hardcoded ACTIVE
-      const user = new User({ ...getValidProps() as any, status: UserStatus.INACTIVE });
+      const user = new User({
+        ...(getValidProps() as any),
+        status: UserStatus.INACTIVE,
+      });
       user.activate();
       expect(user.getStatus()).toBe(UserStatus.ACTIVE);
     });
@@ -52,12 +55,12 @@ describe('User Entity', () => {
 
     it('should update props selectively', () => {
       const user = User.create(getValidProps());
-      user.updateProfile({ 
-        name: 'Jane Doe', 
-        email: user.getEmail(), 
-        phoneNumber: user.getPhoneNumber(), 
-        avatar: user.getAvatar() || '', 
-        roleId: user.getRoleId() 
+      user.updateProfile({
+        name: 'Jane Doe',
+        email: user.getEmail(),
+        phoneNumber: user.getPhoneNumber(),
+        avatar: user.getAvatar() || '',
+        roleId: user.getRoleId(),
       });
       expect(user.getName()).toBe('Jane Doe');
       expect(user.getEmail().getValue()).toBe(getValidProps().email.getValue()); // unchanged

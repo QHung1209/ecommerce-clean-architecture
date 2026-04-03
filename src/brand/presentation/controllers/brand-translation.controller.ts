@@ -31,9 +31,7 @@ export class BrandTranslationController {
   ) {}
 
   @Get()
-  async listBrandTranslations(
-    @Query() query: ListBrandTranslationDto,
-  ) {
+  async listBrandTranslations(@Query() query: ListBrandTranslationDto) {
     const brandTranslations = await this.listBrandTranslationsUseCase.execute(
       query.brandId,
       query,

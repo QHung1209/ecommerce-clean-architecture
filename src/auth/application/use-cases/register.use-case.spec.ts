@@ -16,7 +16,10 @@ describe('RegisterUseCase', () => {
       save: jest.fn(),
     } as any;
     hasher = { hash: jest.fn() } as any;
-    jwt = { generateAccessToken: jest.fn(), generateRefreshToken: jest.fn() } as any;
+    jwt = {
+      generateAccessToken: jest.fn(),
+      generateRefreshToken: jest.fn(),
+    } as any;
 
     useCase = new RegisterUseCase(hasher, repo, jwt);
   });
@@ -30,7 +33,13 @@ describe('RegisterUseCase', () => {
   it('should hash password and save user', async () => {
     repo.findByEmail.mockResolvedValue(null);
     hasher.hash.mockResolvedValue('hashed_password');
-    repo.save.mockResolvedValue({ getId: () => 1, getEmail: () => ({ getValue: () => 'test' }), getRoleId: () => 1, getTokenVersion: () => 1, getName: () => 'Test' } as any);
+    repo.save.mockResolvedValue({
+      getId: () => 1,
+      getEmail: () => ({ getValue: () => 'test' }),
+      getRoleId: () => 1,
+      getTokenVersion: () => 1,
+      getName: () => 'Test',
+    } as any);
 
     await useCase.execute(command);
 

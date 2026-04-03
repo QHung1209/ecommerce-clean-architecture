@@ -3,11 +3,14 @@ import { Device, DeviceProps } from 'src/device/domain/entities/device.entity';
 
 export class PrismaDeviceMapper {
   static toDomain(device: PrismaDevice): Device {
-    const {id, ...rest} = device;
+    const { id, ...rest } = device;
     return Device.create(rest, id);
   }
 
-  static toCreatePersistence(device: DeviceProps, id?: number): Prisma.DeviceUncheckedCreateInput {
+  static toCreatePersistence(
+    device: DeviceProps,
+    id?: number,
+  ): Prisma.DeviceUncheckedCreateInput {
     return {
       id,
       userId: device.userId,
@@ -19,7 +22,10 @@ export class PrismaDeviceMapper {
     };
   }
 
-  static toUpdatePersistence(device: DeviceProps, id?: number): Prisma.DeviceUncheckedUpdateInput {
+  static toUpdatePersistence(
+    device: DeviceProps,
+    id?: number,
+  ): Prisma.DeviceUncheckedUpdateInput {
     return {
       id,
       userId: device.userId,

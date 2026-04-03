@@ -5,7 +5,6 @@ export type VariantOptionProps = {
   value: string;
   variantId: number;
   variant?: Variant;
-
 };
 
 export class VariantOption extends BaseEntity<VariantOptionProps> {

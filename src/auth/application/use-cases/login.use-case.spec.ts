@@ -17,7 +17,10 @@ describe('LoginUseCase', () => {
   beforeEach(() => {
     mockUserRepository = { findByEmail: jest.fn() } as any;
     mockPasswordHasher = { compare: jest.fn() } as any;
-    mockJwtService = { generateAccessToken: jest.fn(), generateRefreshToken: jest.fn() } as any;
+    mockJwtService = {
+      generateAccessToken: jest.fn(),
+      generateRefreshToken: jest.fn(),
+    } as any;
     const mockPermissionCache = { cachePermissionsByUser: jest.fn() } as any;
     const mockCreateDeviceUseCase = { execute: jest.fn() } as any;
 
@@ -26,26 +29,41 @@ describe('LoginUseCase', () => {
       mockPasswordHasher,
       mockPermissionCache,
       mockJwtService,
-      mockCreateDeviceUseCase
+      mockCreateDeviceUseCase,
     );
   });
 
   it('should authenticate successfully and return tokens', async () => {
-    const user = User.create({ email: Email.create('test@example.com'), status: UserStatus.ACTIVE, roleId: 1, password: 'hashed' } as any, 1);
+    const user = User.create(
+      {
+        email: Email.create('test@example.com'),
+        status: UserStatus.ACTIVE,
+        roleId: 1,
+        password: 'hashed',
+      } as any,
+      1,
+    );
     mockUserRepository.findByEmail.mockResolvedValue(user);
     mockPasswordHasher.compare.mockResolvedValue(true);
     mockJwtService.generateAccessToken.mockReturnValue('access');
     mockJwtService.generateRefreshToken.mockReturnValue('refresh');
 
-    const result = await useCase.execute('test@example.com', 'password', '127.0.0.1', 'Chrome');
-    
+    const result = await useCase.execute(
+      'test@example.com',
+      'password',
+      '127.0.0.1',
+      'Chrome',
+    );
+
     expect(result.accessToken).toBe('access');
     expect(mockJwtService.generateAccessToken).toHaveBeenCalled();
   });
 
   it('should throw UnauthorizedException on wrong email', async () => {
     mockUserRepository.findByEmail.mockResolvedValue(null);
-    await expect(useCase.execute('none@example.com', 'pwd', '', '')).rejects.toThrow(UnauthorizedException);
+    await expect(
+      useCase.execute('none@example.com', 'pwd', '', ''),
+    ).rejects.toThrow(UnauthorizedException);
   });
 
   it('should throw UnauthorizedException on wrong password', async () => {
@@ -53,13 +71,17 @@ describe('LoginUseCase', () => {
     mockUserRepository.findByEmail.mockResolvedValue(user);
     mockPasswordHasher.compare.mockResolvedValue(false);
 
-    await expect(useCase.execute('test@example.com', 'wrong', '', '')).rejects.toThrow(UnauthorizedException);
+    await expect(
+      useCase.execute('test@example.com', 'wrong', '', ''),
+    ).rejects.toThrow(UnauthorizedException);
   });
 
   it('should throw UnauthorizedException if user is INACTIVE', async () => {
     const user = new User({ status: UserStatus.INACTIVE } as any, 1);
     mockUserRepository.findByEmail.mockResolvedValue(user);
 
-    await expect(useCase.execute('test@example.com', 'pwd', '', '')).rejects.toThrow(UnauthorizedException);
+    await expect(
+      useCase.execute('test@example.com', 'pwd', '', ''),
+    ).rejects.toThrow(UnauthorizedException);
   });
 });

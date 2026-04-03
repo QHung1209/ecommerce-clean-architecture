@@ -5,7 +5,7 @@ export type JwtPayload = {
   jti: string;
   tokenVersion: number;
   exp: number;
-}
+};
 
 export interface IAuthJwtService {
   generateAccessToken(

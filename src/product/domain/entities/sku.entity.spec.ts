@@ -19,9 +19,16 @@ describe('Sku Entity', () => {
   });
 
   it('should update a Sku entity', () => {
-    const sku = Sku.create({ value: 'S1', productId: 1, price: 0, stock: 0, images: [], variantOptionIds: [] });
+    const sku = Sku.create({
+      value: 'S1',
+      productId: 1,
+      price: 0,
+      stock: 0,
+      images: [],
+      variantOptionIds: [],
+    });
     sku.update({ stock: 5, price: 50 });
-    
+
     expect(sku.getStock()).toBe(5);
     expect(sku.getPrice()).toBe(50);
   });

@@ -81,12 +81,10 @@ export class UpdateProductUseCase {
             .getVariantOptionRepository()
             .deleteMany(optionIdsToDelete, updatedById);
         }
-        await uowCtx
-          .getVariantRepository()
-          .deleteMany(
-            variantsToDelete.map((v) => v.getId()!),
-            updatedById,
-          );
+        await uowCtx.getVariantRepository().deleteMany(
+          variantsToDelete.map((v) => v.getId()!),
+          updatedById,
+        );
       }
 
       // 4. Upsert variants and build variant map (name -> saved Variant entity)
@@ -116,7 +114,12 @@ export class UpdateProductUseCase {
       // 5. Sync variant options per variant
       const allExistingOptions = await uowCtx
         .getVariantOptionRepository()
-        .findMany({ variantId: { in: [...savedVariantsMap.values()].map((v) => v.getId()) }, deletedAt: null });
+        .findMany({
+          variantId: {
+            in: [...savedVariantsMap.values()].map((v) => v.getId()),
+          },
+          deletedAt: null,
+        });
 
       const existingOptionMap = new Map<string, VariantOption>();
       for (const opt of allExistingOptions) {
@@ -151,15 +154,13 @@ export class UpdateProductUseCase {
               .getVariantOptionRepository()
               .save(existingOpt, updatedById);
           } else {
-            savedOpt = await uowCtx
-              .getVariantOptionRepository()
-              .save(
-                VariantOption.create({
-                  value: optValue,
-                  variantId: variant.getId()!,
-                }),
-                updatedById,
-              );
+            savedOpt = await uowCtx.getVariantOptionRepository().save(
+              VariantOption.create({
+                value: optValue,
+                variantId: variant.getId()!,
+              }),
+              updatedById,
+            );
           }
           savedOptionMap.set(key, savedOpt);
         }
@@ -176,15 +177,15 @@ export class UpdateProductUseCase {
         incomingSkuValues,
       );
       if (skusToDelete.length > 0) {
-        await uowCtx
-          .getSkuRepository()
-          .deleteMany(
-            skusToDelete.map((s) => s.getId()!),
-            updatedById,
-          );
+        await uowCtx.getSkuRepository().deleteMany(
+          skusToDelete.map((s) => s.getId()!),
+          updatedById,
+        );
       }
 
-      const existingSkuMap = new Map(existingSKUs.map((s) => [s.getValue(), s]));
+      const existingSkuMap = new Map(
+        existingSKUs.map((s) => [s.getValue(), s]),
+      );
 
       // 7. Upsert SKUs — resolve variant option IDs via domain service
       for (const skuData of data.skus) {
@@ -205,19 +206,17 @@ export class UpdateProductUseCase {
           });
           await uowCtx.getSkuRepository().save(existing, updatedById);
         } else {
-          await uowCtx
-            .getSkuRepository()
-            .save(
-              Sku.create({
-                value: skuData.value,
-                price: skuData.price,
-                stock: skuData.stock,
-                images: skuData.images,
-                productId: id,
-                variantOptionIds,
-              }),
-              updatedById,
-            );
+          await uowCtx.getSkuRepository().save(
+            Sku.create({
+              value: skuData.value,
+              price: skuData.price,
+              stock: skuData.stock,
+              images: skuData.images,
+              productId: id,
+              variantOptionIds,
+            }),
+            updatedById,
+          );
         }
       }
 

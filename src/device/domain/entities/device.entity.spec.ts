@@ -18,7 +18,7 @@ describe('Device Entity', () => {
 
   it('should activate, deactivate and updateOnLogin', () => {
     const device = Device.create(getProps());
-    
+
     device.deactivate();
     expect(device.getIsActive()).toBe(false);
 

@@ -1,6 +1,10 @@
 import { UpdateUserUseCase } from './update-user.use-case';
 import { User, UserStatus } from 'src/user/domain/entities/user.entity';
-import { NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
+import {
+  NotFoundException,
+  BadRequestException,
+  ConflictException,
+} from '@nestjs/common';
 import type { IUserRepository } from 'src/user/domain/interfaces/user-repository.interface';
 
 describe('UpdateUserUseCase', () => {
@@ -22,12 +26,26 @@ describe('UpdateUserUseCase', () => {
     mockUserRepository.findById.mockResolvedValue(user);
     mockUserRepository.save.mockResolvedValue(user);
 
-    await useCase.execute(1, { name: 'New Name', email: 'valid@example.com', phoneNumber: '123456789', avatar: '', roleId: 2 });
+    await useCase.execute(1, {
+      name: 'New Name',
+      email: 'valid@example.com',
+      phoneNumber: '123456789',
+      avatar: '',
+      roleId: 2,
+    });
     expect(mockUserRepository.save).toHaveBeenCalled();
   });
 
   it('should throw NotFoundException if user does not exist', async () => {
     mockUserRepository.findById.mockResolvedValue(null);
-    await expect(useCase.execute(1, { name: '', email: 'valid@example.com', phoneNumber: '', avatar: '', roleId: 2 })).rejects.toThrow(NotFoundException);
+    await expect(
+      useCase.execute(1, {
+        name: '',
+        email: 'valid@example.com',
+        phoneNumber: '',
+        avatar: '',
+        roleId: 2,
+      }),
+    ).rejects.toThrow(NotFoundException);
   });
 });

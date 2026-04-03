@@ -22,7 +22,9 @@ describe('Category Entity', () => {
 
     it('ensureCanDelete should throw Error when category has children', () => {
       const entity = Category.create(getProps());
-      expect(() => entity.ensureCanDelete(true)).toThrow('Cannot delete category that has children');
+      expect(() => entity.ensureCanDelete(true)).toThrow(
+        'Cannot delete category that has children',
+      );
     });
   });
 });

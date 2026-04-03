@@ -12,7 +12,7 @@ describe('Language Entity', () => {
   it('should update a Language entity', () => {
     const language = Language.create({ name: 'English', code: 'EN' });
     language.update({ name: 'American English' });
-    
+
     expect(language.getName()).toBe('American English');
     expect(language.getCode()).toBe('EN');
   });

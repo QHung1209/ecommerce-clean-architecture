@@ -13,7 +13,7 @@ export class PrismaPermissionMapper {
 
   static toPersistence(
     permission: PermissionProps,
-    id?: number, 
+    id?: number,
   ): Prisma.PermissionUncheckedCreateInput {
     return {
       id,

@@ -12,7 +12,7 @@ import { PrismaService } from './infrastructure/databases/prisma/prisma.service'
       useClass: PrismaUnitOfWork,
       provide: UNIT_OF_WORK,
     },
-    PrismaService
+    PrismaService,
   ],
   imports: [RabbitMQEventModule, EmailModule],
   exports: [RabbitMQEventModule, EmailModule, UNIT_OF_WORK],

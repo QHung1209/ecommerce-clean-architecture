@@ -14,8 +14,17 @@ describe('CreateCategoryUseCase', () => {
   it('should successfully create and save a new category', async () => {
     repo.findByCondition = jest.fn().mockResolvedValue(null);
     repo.save.mockResolvedValue(Category.create({ name: 'Tech' } as any, 1));
-    const result = await useCase.execute({ name: 'Tech', logo: 'logo.png', description: '', slug: 'tech', parentCategoryId: 0 }, 1);
-    
+    const result = await useCase.execute(
+      {
+        name: 'Tech',
+        logo: 'logo.png',
+        description: '',
+        slug: 'tech',
+        parentCategoryId: 0,
+      },
+      1,
+    );
+
     expect(repo.save).toHaveBeenCalled();
     expect(result.getId()).toBe(1);
     expect(result.getName()).toBe('Tech');

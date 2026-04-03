@@ -1,1 +1,3 @@
-export const VERIFICATION_CODE_REPOSITORY = Symbol('VerificationCodeRepository');
+export const VERIFICATION_CODE_REPOSITORY = Symbol(
+  'VerificationCodeRepository',
+);

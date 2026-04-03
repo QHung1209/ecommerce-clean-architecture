@@ -19,9 +19,17 @@ describe('Product Entity', () => {
   });
 
   it('should update a Product entity', () => {
-    const product = Product.create({ name: 'Laptop', description: '', basePrice: 0, virtualPrice: 0, brandId: 1, images: [], categoryIds: [] });
+    const product = Product.create({
+      name: 'Laptop',
+      description: '',
+      basePrice: 0,
+      virtualPrice: 0,
+      brandId: 1,
+      images: [],
+      categoryIds: [],
+    });
     product.update({ name: 'Pro Laptop', basePrice: 2000 });
-    
+
     expect(product.getName()).toBe('Pro Laptop');
     expect(product.getBasePrice()).toBe(2000);
   });

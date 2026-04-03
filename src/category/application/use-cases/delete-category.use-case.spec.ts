@@ -19,7 +19,10 @@ describe('DeleteCategoryUseCase', () => {
       deleteByCategoryId: jest.fn(),
     } as any;
 
-    useCase = new DeleteCategoryUseCase(mockCategoryRepo, mockCategoryTransRepo);
+    useCase = new DeleteCategoryUseCase(
+      mockCategoryRepo,
+      mockCategoryTransRepo,
+    );
   });
 
   it('should delete category and translations if no children exist', async () => {
@@ -42,7 +45,9 @@ describe('DeleteCategoryUseCase', () => {
     const category = Category.create({ name: 'Test' } as any);
     mockCategoryRepo.findById.mockResolvedValue(category);
     // Simulate finding a child
-    mockCategoryRepo.getCategoriesByParentCategoryId.mockResolvedValue([{ id: 2 }] as any);
+    mockCategoryRepo.getCategoriesByParentCategoryId.mockResolvedValue([
+      { id: 2 },
+    ] as any);
 
     // ensureCanDelete domain method throws Error, Use Case catches and wraps in BadRequestException
     await expect(useCase.execute(1, 2)).rejects.toThrow(BadRequestException);

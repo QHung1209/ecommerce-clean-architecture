@@ -50,6 +50,4 @@ export class AuthJwtService implements IAuthJwtService {
       secret: this.configService.get('JWT_REFRESH_SECRET'),
     });
   }
-
-
 }

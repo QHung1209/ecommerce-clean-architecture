@@ -7,7 +7,10 @@ import { PrismaVariantMapper } from '../mappers/prisma-variant.mapper';
 
 @Injectable()
 export class PrismaVariantRepository implements IVariantRepository {
-  constructor(@Inject(PrismaService) private readonly prisma: PrismaService | Prisma.TransactionClient) {}
+  constructor(
+    @Inject(PrismaService)
+    private readonly prisma: PrismaService | Prisma.TransactionClient,
+  ) {}
   async save(entity: Variant, id: number): Promise<Variant> {
     const client = this.prisma;
     const savedVariant = entity.hasId()
@@ -42,7 +45,9 @@ export class PrismaVariantRepository implements IVariantRepository {
         variantOptions: true,
       },
     });
-    return variants.map((variant) => PrismaVariantMapper.toDomainWithOption(variant));
+    return variants.map((variant) =>
+      PrismaVariantMapper.toDomainWithOption(variant),
+    );
   }
   async deleteMany(ids: number[], deletedById: number): Promise<void> {
     const client = this.prisma;

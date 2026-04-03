@@ -1,4 +1,7 @@
-import { Prisma, VerificationCode as PrismaVerificationCode } from '@prisma/client';
+import {
+  Prisma,
+  VerificationCode as PrismaVerificationCode,
+} from '@prisma/client';
 import {
   VerificationCode,
   VerificationCodeProps,
@@ -19,7 +22,10 @@ export class VerificationCodeMapper {
     );
   }
 
-  static toPersistence(verificationCodeProps: VerificationCodeProps, id?: number): Prisma.VerificationCodeUncheckedCreateInput{
+  static toPersistence(
+    verificationCodeProps: VerificationCodeProps,
+    id?: number,
+  ): Prisma.VerificationCodeUncheckedCreateInput {
     return {
       id,
       email: verificationCodeProps.email.getValue(),

@@ -19,7 +19,10 @@ export class PrismaUserMapper {
     return userEntity;
   }
 
-  static toPersistence(userProps: UserProps, id?: number): Prisma.UserUncheckedCreateInput {
+  static toPersistence(
+    userProps: UserProps,
+    id?: number,
+  ): Prisma.UserUncheckedCreateInput {
     return {
       id,
       email: userProps.email.getValue(),

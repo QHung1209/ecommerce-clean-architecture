@@ -14,5 +14,8 @@ export interface ICategoryRepository extends IBaseRepository<Category, number> {
     parentCategoryId?: number;
     languageCode?: string;
   }): Promise<Category[] | []>;
-  findByCondition(condition: any, languageCode?: string): Promise<Category | null>;
+  findByCondition(
+    condition: any,
+    languageCode?: string,
+  ): Promise<Category | null>;
 }

@@ -34,7 +34,9 @@ export class CategoryResponseMapper {
     });
     categories.forEach((category) => {
       const node = categoryMap.get(category.id);
-      const parent = category.parentCategoryId ? categoryMap.get(category.parentCategoryId) : null;
+      const parent = category.parentCategoryId
+        ? categoryMap.get(category.parentCategoryId)
+        : null;
       if (parent) {
         if (!parent.children) {
           parent.children = [];

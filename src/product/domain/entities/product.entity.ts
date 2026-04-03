@@ -8,7 +8,7 @@ export type ProductProps = {
   virtualPrice: number;
   description: string;
   brandId: number;
-  brand?: Brand
+  brand?: Brand;
   images: string[];
   categoryIds: number[];
   categories?: Category[];

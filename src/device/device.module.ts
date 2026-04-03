@@ -7,7 +7,10 @@ import { ListDevicesUseCase } from './application/use-cases/list-devices.use-cas
 import { DEVICE_REPOSITORY } from './device.constants';
 import { PrismaDeviceRepository } from './infrastructure/prisma/repositories/prisma-device.repository';
 import { LogoutAllUseCase } from './application/use-cases/logout-all.use-case';
-import { LogoutDeviceUseCase, REFRESH_TOKEN_TTL } from './application/use-cases/logout-device.use-case';
+import {
+  LogoutDeviceUseCase,
+  REFRESH_TOKEN_TTL,
+} from './application/use-cases/logout-device.use-case';
 import { DeviceController } from './presentation/controllers/device.controller';
 import { UserModule } from 'src/user/user.module';
 

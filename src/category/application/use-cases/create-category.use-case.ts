@@ -10,7 +10,7 @@ type CreateCategoryCommand = {
   slug: string;
   logo: string;
   parentCategoryId: number;
-}
+};
 
 @Injectable()
 export class CreateCategoryUseCase {

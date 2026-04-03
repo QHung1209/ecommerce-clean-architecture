@@ -13,7 +13,7 @@ describe('Brand Entity', () => {
   it('should update a Brand entity', () => {
     const brand = Brand.create({ name: 'Nike', description: '', logo: '' });
     brand.update({ logo: 'new-nike.png' });
-    
+
     expect(brand.getLogo()).toBe('new-nike.png');
     expect(brand.getName()).toBe('Nike');
   });

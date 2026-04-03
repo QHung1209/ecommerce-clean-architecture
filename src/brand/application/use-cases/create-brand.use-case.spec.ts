@@ -13,8 +13,11 @@ describe('CreateBrandUseCase', () => {
 
   it('should successfully create and save a new brand', async () => {
     repo.save.mockResolvedValue(Brand.create({ name: 'Nike' } as any, 1));
-    const result = await useCase.execute({ name: 'Nike', logo: 'logo.png', description: '' }, 1);
-    
+    const result = await useCase.execute(
+      { name: 'Nike', logo: 'logo.png', description: '' },
+      1,
+    );
+
     expect(repo.save).toHaveBeenCalled();
     expect(result.getId()).toBe(1);
     expect(result.getName()).toBe('Nike');

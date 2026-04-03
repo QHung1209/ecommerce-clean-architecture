@@ -15,7 +15,7 @@ export class ListPermissionsDto {
   @Type(() => Number)
   @IsInt()
   page: number;
-  
+
   @IsString()
   @IsOptional()
   search?: string;
