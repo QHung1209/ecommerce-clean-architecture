@@ -18,12 +18,12 @@ export class VerifyOtpUseCase {
       throw new BadRequestException('Invalid verification code');
     }
 
-    if (verificationCode.getCode() !== code) {
-      throw new BadRequestException('Invalid verification code');
-    }
-
-    if (verificationCode.isExpired()) {
-      throw new BadRequestException('Verification code expired');
+    try {
+      verificationCode.verify(code);
+    } catch (error) {
+      throw new BadRequestException(
+        error instanceof Error ? error.message : 'Invalid verification code',
+      );
     }
 
     await this.verificationCodeRepository.delete(email, type);

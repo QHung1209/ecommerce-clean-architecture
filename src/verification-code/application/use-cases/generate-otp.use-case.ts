@@ -26,14 +26,12 @@ export class GenerateOtpUseCase {
   async execute(emailStr: string, type: VerificationCodeType): Promise<string> {
     const email = Email.create(emailStr);
     const code = VerificationCode.generateRandomCode(6);
-    const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
 
-    const verificationCode = VerificationCode.create({
+    const verificationCode = VerificationCode.createWithExpiration(
       email,
       code,
       type,
-      expiresAt,
-    });
+    );
 
     await this.verificationCodeRepository.save(verificationCode);
     await this.eventBus.publish(OTP_EXCHANGE, OTP_CREATED, {

@@ -26,7 +26,7 @@ export class DeleteRoleUseCase {
     if (usersExisted.length > 0) {
       await Promise.all(
         usersExisted.map((user) => {
-          user.setRoleId(null);
+          user.detachRole();
           return this.userRepository.save(user);
         }),
       );

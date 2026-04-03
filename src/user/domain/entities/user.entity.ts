@@ -75,6 +75,14 @@ export class User extends BaseEntity<UserProps> {
     this.props.tokenVersion = tokenVersion;
   }
 
+  incrementTokenVersion(): void {
+    this.props.tokenVersion += 1;
+  }
+
+  detachRole(): void {
+    this.props.roleId = null;
+  }
+
   setAvatar(avatar: string): void {
     this.props.avatar = avatar;
   }

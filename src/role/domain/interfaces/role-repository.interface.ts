@@ -1,5 +1,5 @@
 import { Role } from '../entities/role.entity';
-import { HTTPMethod } from '@prisma/client';
+import { HTTPMethod } from 'src/shared/domain/enums/http-method.enum';
 import { IBaseRepository } from 'src/shared/domain/interfaces/base-repository.interface';
 
 export interface IRoleRepository extends IBaseRepository<Role, number> {

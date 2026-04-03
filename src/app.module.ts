@@ -15,6 +15,7 @@ import { LanguageModule } from './language/language.module';
 import { CategoryModule } from './category/category.module';
 import { BrandModule } from './brand/brand.module';
 import { StorageModule } from './storage/storage.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { StorageModule } from './storage/storage.module';
     CategoryModule,
     BrandModule,
     StorageModule,
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [AppService],

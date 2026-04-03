@@ -3,7 +3,7 @@ import { RedisService } from 'src/shared/infrastructure/cache/redis/redis.servic
 import { Inject } from '@nestjs/common';
 import { ROLE_REPOSITORY } from 'src/role/role.constants';
 import type { IRoleRepository } from 'src/role/domain/interfaces/role-repository.interface';
-import { HTTPMethod } from '@prisma/client';
+import { HTTPMethod } from 'src/shared/domain/enums/http-method.enum';
 import { IPermissionCacheService } from 'src/auth/domain/interfaces/permission-cache.service.interface';
 
 @Injectable()

@@ -11,8 +11,8 @@ export abstract class BaseEntity<Props> {
     return this.props;
   }
 
-  getId(): number | undefined {
-    return this.id;
+  getId(): number {
+    return this.id!;
   }
 
   hasId(): boolean {

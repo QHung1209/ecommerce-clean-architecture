@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { HTTPMethod } from '@prisma/client';
+import { HTTPMethod } from 'src/shared/domain/enums/http-method.enum';
 import {
   Permission,
   PermissionProps,

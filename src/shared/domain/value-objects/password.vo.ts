@@ -1,9 +1,8 @@
-import { BadRequestException } from "@nestjs/common";
-
 export class Password {
   private constructor(private readonly value: string) {
-    if (!this.isValid(value)) {
-      throw new Error('Invalid email format');
+    const errors = this.validate(value);
+    if (errors.length > 0) {
+      throw new Error(`Invalid password: ${errors.join(', ')}`);
     }
   }
 
@@ -15,7 +14,7 @@ export class Password {
     return new Password(raw);
   }
 
-  private isValid(raw: string): boolean {
+  private validate(raw: string): string[] {
     const errors: string[] = [];
 
     if (!raw || raw.length < 8) {
@@ -34,9 +33,6 @@ export class Password {
       errors.push('Password must contain at least one digit');
     }
 
-    if (errors.length > 0) {
-      throw new BadRequestException(`Invalid password: ${errors.join(', ')}`);
-    }
-    return true;
+    return errors;
   }
 }

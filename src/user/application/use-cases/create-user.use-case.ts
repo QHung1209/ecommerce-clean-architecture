@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { IUserRepository } from 'src/user/domain/interfaces/user-repository.interface';
 import { USER_REPOSITORY } from 'src/user/user.constants';
-import { CreateUserDto } from 'src/user/presentation/dto/create-user.dto';
 import { User } from 'src/user/domain/entities/user.entity';
 import { Password } from 'src/shared/domain/value-objects/password.vo';
 import { Email } from 'src/shared/domain/value-objects/email.vo';
@@ -22,6 +21,11 @@ export class CreateUserUseCase {
   ) {}
 
   async execute(data: CreateUserCommand): Promise<User> {
+    const existed = await this.userRepository.findByEmail(data.email);
+    if (existed) {
+      throw new Error('Email already in use');
+    }
+
     const user = User.create({
       name: data.name,
       email: Email.create(data.email),

@@ -46,4 +46,14 @@ export class Category extends BaseEntity<CategoryProps> {
     this.props = { ...this.props, ...props };
     return this;
   }
+
+  /**
+   * Domain rule: a category cannot be deleted if it has children.
+   * Throws domain error if deletion is not allowed.
+   */
+  ensureCanDelete(hasChildren: boolean): void {
+    if (hasChildren) {
+      throw new Error('Cannot delete category that has children');
+    }
+  }
 }

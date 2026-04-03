@@ -3,7 +3,7 @@ import { IRoleRepository } from 'src/role/domain/interfaces/role-repository.inte
 import { PrismaService } from 'src/shared/infrastructure/databases/prisma/prisma.service';
 import { SharedQueryDto } from 'src/shared/presentation/dto/shared.dto';
 import { Injectable } from '@nestjs/common';
-import { HTTPMethod } from '@prisma/client';
+import { HTTPMethod } from 'src/shared/domain/enums/http-method.enum';
 import { PrismaRoleMapper } from '../mappers/prisma-role.mapper';
 
 @Injectable()
@@ -76,7 +76,7 @@ export class PrismaRoleRepository implements IRoleRepository {
     roleId: number,
   ): Promise<{ path: string; method: HTTPMethod }[] | null> {
     const role = await this.prisma.role.findUnique({
-      where: { deletedAt: null,  id: roleId },
+      where: { deletedAt: null, id: roleId },
       select: {
         permissions: {
           select: {
@@ -86,7 +86,9 @@ export class PrismaRoleRepository implements IRoleRepository {
         },
       },
     });
-    return role?.permissions ?? null;
+    return (role?.permissions ?? null) as
+      | { path: string; method: HTTPMethod }[]
+      | null;
   }
 
   async getRolesByPermissionId(permissionId: number): Promise<Role[] | []> {

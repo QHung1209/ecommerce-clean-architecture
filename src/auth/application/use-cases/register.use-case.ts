@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { AUTH_JWT_SERVICE } from 'src/auth/auth.constants';
 import type { IAuthJwtService } from 'src/auth/domain/interfaces/auth-jwt.service.interface';
-import { BcryptPasswordHasher } from 'src/shared/infrastructure/securities/bcrypt-password-hasher.service';
+import type { IPasswordHasher } from 'src/shared/domain/interfaces/password-hasher.interface';
 import { PASSWORD_HASHER } from 'src/shared/shared.constants';
 import type { IUserRepository } from 'src/user/domain/interfaces/user-repository.interface';
 import { USER_REPOSITORY } from 'src/user/user.constants';
 import { User } from 'src/user/domain/entities/user.entity';
 import { Email } from 'src/shared/domain/value-objects/email.vo';
 import { Password } from 'src/shared/domain/value-objects/password.vo';
-import { v4 as uuidv4 } from 'uuid';
+import * as crypto from 'crypto';
 
 type RegisterCommand = {
   email: string;
@@ -19,7 +19,7 @@ type RegisterCommand = {
 export class RegisterUseCase {
   constructor(
     @Inject(PASSWORD_HASHER)
-    private readonly passwordHasher: BcryptPasswordHasher,
+    private readonly passwordHasher: IPasswordHasher,
 
     @Inject(USER_REPOSITORY)
     private readonly userRepository: IUserRepository,
@@ -58,7 +58,7 @@ export class RegisterUseCase {
       userId,
       savedUser.getEmail().getValue(),
       savedUser.getRoleId(),
-      uuidv4(),
+      crypto.randomUUID(),
       savedUser.getTokenVersion(),
     );
 
@@ -66,7 +66,7 @@ export class RegisterUseCase {
       userId,
       savedUser.getEmail().getValue(),
       savedUser.getRoleId(),
-      uuidv4(),
+      crypto.randomUUID(),
       savedUser.getTokenVersion(),
     );
 

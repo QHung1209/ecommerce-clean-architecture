@@ -1,6 +1,6 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import type { IUserRepository } from 'src/user/domain/interfaces/user-repository.interface';
-import type { BcryptPasswordHasher } from 'src/shared/infrastructure/securities/bcrypt-password-hasher.service';
+import type { IPasswordHasher } from 'src/shared/domain/interfaces/password-hasher.interface';
 import { USER_REPOSITORY } from 'src/user/user.constants';
 import {
   AUTH_JWT_SERVICE,
@@ -10,7 +10,7 @@ import { PASSWORD_HASHER } from 'src/shared/shared.constants';
 import { CreateDeviceUseCase } from 'src/device/application/use-cases/create-device.use-case';
 import type { IPermissionCacheService } from 'src/auth/domain/interfaces/permission-cache.service.interface';
 import type { IAuthJwtService } from 'src/auth/domain/interfaces/auth-jwt.service.interface';
-import { v4 as uuidv4 } from 'uuid';
+import * as crypto from 'crypto';
 
 type LoginResult = {
   accessToken: string;
@@ -29,7 +29,7 @@ export class LoginUseCase {
     @Inject(USER_REPOSITORY)
     private readonly userRepository: IUserRepository,
     @Inject(PASSWORD_HASHER)
-    private readonly passwordHasher: BcryptPasswordHasher,
+    private readonly passwordHasher: IPasswordHasher,
     @Inject(PERMISSION_CACHE_SERVICE)
     private readonly permissionCacheService: IPermissionCacheService,
     @Inject(AUTH_JWT_SERVICE)
@@ -66,7 +66,7 @@ export class LoginUseCase {
       throw new Error('User ID is undefined');
     }
     user;
-    const jti = uuidv4();
+    const jti = crypto.randomUUID();
     const accessToken = this.jwtService.generateAccessToken(
       userId,
       user.getEmail().getValue(),

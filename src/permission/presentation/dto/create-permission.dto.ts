@@ -1,4 +1,4 @@
-import { HTTPMethod } from '@prisma/client';
+import { HTTPMethod } from 'src/shared/domain/enums/http-method.enum';
 import { IsString } from 'class-validator';
 
 export class CreatePermissionDto {

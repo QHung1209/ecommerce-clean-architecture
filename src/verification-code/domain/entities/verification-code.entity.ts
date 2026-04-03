@@ -12,6 +12,8 @@ export type VerificationCodeProps = {
   expiresAt: Date;
 };
 
+const DEFAULT_OTP_EXPIRATION_MINUTES = 5;
+
 export class VerificationCode extends BaseEntity<VerificationCodeProps> {
   constructor(props: VerificationCodeProps, id?: number) {
     super(props, id);
@@ -33,28 +35,38 @@ export class VerificationCode extends BaseEntity<VerificationCodeProps> {
     return this.props.expiresAt;
   }
 
-  setEmail(email: Email): void {
-    this.props.email = email;
-  }
-
-  setCode(code: string): void {
-    this.props.code = code;
-  }
-
-  setType(type: VerificationCodeType): void {
-    this.props.type = type;
-  }
-
-  setExpiresAt(expiresAt: Date): void {
-    this.props.expiresAt = expiresAt;
-  }
-
   isExpired(): boolean {
     return new Date() > this.props.expiresAt;
   }
 
+  /**
+   * Domain method: verify an OTP code against this verification code.
+   * Throws domain errors if code is invalid or expired.
+   */
+  verify(code: string): void {
+    if (this.props.code !== code) {
+      throw new Error('Invalid verification code');
+    }
+    if (this.isExpired()) {
+      throw new Error('Verification code expired');
+    }
+  }
+
   static create(props: VerificationCodeProps, id?: number): VerificationCode {
     return new VerificationCode(props, id);
+  }
+
+  /**
+   * Factory method that auto-calculates expiration from domain-owned default.
+   */
+  static createWithExpiration(
+    email: Email,
+    code: string,
+    type: VerificationCodeType,
+    expirationMinutes: number = DEFAULT_OTP_EXPIRATION_MINUTES,
+  ): VerificationCode {
+    const expiresAt = new Date(Date.now() + expirationMinutes * 60 * 1000);
+    return new VerificationCode({ email, code, type, expiresAt });
   }
 
   static generateRandomCode(length: number): string {

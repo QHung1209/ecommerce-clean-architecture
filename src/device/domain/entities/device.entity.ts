@@ -46,11 +46,42 @@ export class Device extends BaseEntity<DeviceProps> {
     this.props.isActive = false;
   }
 
-  update(data: DeviceProps): void {
+  /**
+   * Domain method: update device on login — refreshes lastActive and jti.
+   */
+  updateOnLogin(data: { jti: string; userAgent: string; ip: string }): void {
+    this.props.jti = data.jti;
+    this.props.userAgent = data.userAgent;
+    this.props.ip = data.ip;
+    this.props.lastActive = new Date();
+    this.props.isActive = true;
+  }
+
+  update(data: Partial<DeviceProps>): void {
     this.props = { ...this.props, ...data };
   }
 
-  static create(props: DeviceProps, id?: number): Device {
+  /**
+   * Factory method with domain defaults: lastActive = now, isActive = true.
+   */
+  static create(
+    props: Omit<DeviceProps, 'lastActive' | 'isActive'>,
+    id?: number,
+  ): Device {
+    return new Device(
+      {
+        ...props,
+        lastActive: new Date(),
+        isActive: true,
+      },
+      id,
+    );
+  }
+
+  /**
+   * Reconstitute from persistence (all props provided).
+   */
+  static reconstitute(props: DeviceProps, id: number): Device {
     return new Device(props, id);
   }
 }

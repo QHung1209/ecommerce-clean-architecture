@@ -22,7 +22,7 @@ export class LogoutAllUseCase {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    user.setTokenVersion(user.getTokenVersion() + 1);
+    user.incrementTokenVersion();
     await Promise.all([
       this.userRepository.save(user),
       this.deviceRepository.deleteAll(id),

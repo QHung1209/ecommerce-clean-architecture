@@ -24,10 +24,15 @@ export class DeleteCategoryUseCase {
     if (!category) {
       throw new NotFoundException('Category not found');
     }
-    const childrenCategoryIds =
+    const childrenCategories =
       await this.categoryRepository.getCategoriesByParentCategoryId(id);
-    if (childrenCategoryIds.length > 0) {
-      throw new BadRequestException('Category has children');
+
+    try {
+      category.ensureCanDelete(childrenCategories.length > 0);
+    } catch (error) {
+      throw new BadRequestException(
+        error instanceof Error ? error.message : 'Category has children',
+      );
     }
 
     //Future: Check product

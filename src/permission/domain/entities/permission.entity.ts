@@ -1,5 +1,5 @@
-import { HTTPMethod } from '@prisma/client';
 import { BaseEntity } from 'src/shared/domain/entities/entity';
+import { HTTPMethod } from 'src/shared/domain/enums/http-method.enum';
 
 export type PermissionProps = {
   name: string;

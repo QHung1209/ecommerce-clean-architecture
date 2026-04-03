@@ -3,7 +3,7 @@ import { CanActivate } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 import { Request } from 'express';
-import { HTTPMethod } from '@prisma/client';
+import { HTTPMethod } from 'src/shared/domain/enums/http-method.enum';
 import { PERMISSION_CACHE_SERVICE } from 'src/auth/auth.constants';
 import type { IPermissionCacheService } from 'src/auth/domain/interfaces/permission-cache.service.interface';
 import { IS_SKIP_PERMISSION_KEY } from '../decorators/skip-permission.decorator';

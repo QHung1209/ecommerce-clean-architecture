@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import type { IRoleRepository } from 'src/role/domain/interfaces/role-repository.interface';
 import { Role } from 'src/role/domain/entities/role.entity';
 import { ROLE_REPOSITORY } from 'src/role/role.constants';
-import { PaginatedResult } from 'src/shared/presentation/mappers/pagination.interface';
+import { PaginatedResult } from 'src/shared/domain/interfaces/paginated-result.interface';
 
 type QueryCommand = {
   limit: number;

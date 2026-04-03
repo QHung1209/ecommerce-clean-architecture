@@ -1,13 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DEVICE_REPOSITORY } from 'src/device/device.constants';
-import { Device, DeviceProps } from 'src/device/domain/entities/device.entity';
+import { Device } from 'src/device/domain/entities/device.entity';
 import type { IDeviceRepository } from 'src/device/domain/interfaces/device-repository.interface';
+
 type CreateDeviceCommand = {
   userAgent: string;
   ip: string;
   userId: number;
   jti: string;
 };
+
 @Injectable()
 export class CreateDeviceUseCase {
   constructor(
@@ -21,16 +23,19 @@ export class CreateDeviceUseCase {
       data.userAgent,
       data.ip,
     );
-    const dataDevice = {
-      ...data,
-      lastActive: new Date(),
-      jti: data.jti,
-      isActive: true,
-    };
     if (device) {
-      device.update(dataDevice);
+      device.updateOnLogin({
+        jti: data.jti,
+        userAgent: data.userAgent,
+        ip: data.ip,
+      });
     } else {
-      device = Device.create(dataDevice);
+      device = Device.create({
+        userId: data.userId,
+        userAgent: data.userAgent,
+        ip: data.ip,
+        jti: data.jti,
+      });
     }
     return await this.deviceRepository.save(device);
   }
